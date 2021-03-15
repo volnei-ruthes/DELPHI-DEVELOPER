@@ -1,0 +1,6 @@
+teste ok 123
+
+
+windows
+ C:\Users\volne\Downloads\Armario de Exemplos Delphi\10. CopyFile\pasta_origem
+'C:\Users\volne\Downloads\Armario de Exemplos Delphi\pasta_origem\teste.txt'
