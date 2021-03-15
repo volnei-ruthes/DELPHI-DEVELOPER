@@ -11,7 +11,6 @@ object Form1: TForm1
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -38,7 +37,7 @@ object Form1: TForm1
   end
   object Button2: TButton
     Left = 40
-    Top = 120
+    Top = 112
     Width = 193
     Height = 25
     Caption = 'Exemplo Weekend'
@@ -53,5 +52,14 @@ object Form1: TForm1
     Caption = 'FOR varrendo um Conjunto'
     TabOrder = 2
     OnClick = Button3Click
+  end
+  object Button4: TButton
+    Left = 40
+    Top = 144
+    Width = 193
+    Height = 25
+    Caption = 'Button4'
+    TabOrder = 3
+    OnClick = Button4Click
   end
 end

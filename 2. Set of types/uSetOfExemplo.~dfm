@@ -1,8 +1,8 @@
 object Form1: TForm1
   Left = 192
   Top = 125
-  Width = 468
-  Height = 394
+  Width = 288
+  Height = 220
   Caption = 'TIPs Conjuntos Type'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,51 +11,55 @@ object Form1: TForm1
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
+  object Label1: TLabel
+    Left = 66
+    Top = 16
+    Width = 139
+    Height = 16
+    Caption = 'EXEMPLOS SET OF'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
   object Button1: TButton
     Left = 40
-    Top = 136
+    Top = 80
     Width = 193
     Height = 25
     Caption = 'OPERA'#199#213'ES DE CONJUNTOS'
     TabOrder = 0
     OnClick = Button1Click
   end
-  object ComboBox1: TComboBox
-    Left = 72
-    Top = 16
-    Width = 145
-    Height = 21
-    ItemHeight = 13
-    TabOrder = 1
-    Text = 'ComboBox1'
-  end
   object Button2: TButton
     Left = 40
-    Top = 176
+    Top = 112
     Width = 193
     Height = 25
     Caption = 'Exemplo Weekend'
-    TabOrder = 2
+    TabOrder = 1
     OnClick = Button2Click
   end
   object Button3: TButton
     Left = 40
-    Top = 104
+    Top = 48
     Width = 193
     Height = 25
     Caption = 'FOR varrendo um Conjunto'
-    TabOrder = 3
+    TabOrder = 2
     OnClick = Button3Click
   end
   object Button4: TButton
     Left = 40
-    Top = 72
+    Top = 144
     Width = 193
     Height = 25
-    Caption = 'For populando o ComboBox'
-    TabOrder = 4
+    Caption = 'Button4'
+    TabOrder = 3
+    OnClick = Button4Click
   end
 end

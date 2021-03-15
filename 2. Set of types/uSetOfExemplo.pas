@@ -21,10 +21,11 @@ type
     Button2: TButton;
     Button3: TButton;
     Label1: TLabel;
-    procedure FormShow(Sender: TObject);
+    Button4: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -38,15 +39,6 @@ var
 implementation
 
 {$R *.dfm}
-
-procedure TForm1.FormShow(Sender: TObject);
-
-var
- consoantes : array of string;
- i:integer;
-begin
-  SetLength(consoantes, 50); 
-end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 var
@@ -122,6 +114,33 @@ begin
           Showmessage('o Valor: '+GetEnumName(TypeInfo(TAlfabeto),integer(I))+ ' - esta no conjunto B!');
        end;
    end;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+     function StringInSet(const S: String; const StringSet: array of String): Boolean;
+     var
+        I: Integer;
+     begin
+        Result := False;
+        for I := Low(StringSet) to High(StringSet) do
+        begin
+          if S = StringSet[I] then
+          begin
+            Result := True;
+            Break;
+          end;
+        end;
+      end;
+var
+  consoantes: array of string;
+
+begin
+  SetLength(consoantes, 50);
+  consoantes[0] := 'a';
+  consoantes[1] := 'b';
+  consoantes[2] := 'c';
+
+  showmessage(BoolToStr(StringInSet('b',consoantes))); 
 end;
 
 end.
