@@ -11,8 +11,14 @@ type
     Button1: TButton;
     Label1: TLabel;
     Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -265,6 +271,157 @@ var
 
 begin
 
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+var
+  smallString    : string[2];
+  smallString2 : ShortString;
+begin
+  //TYPES STRING AND CHARS
+  {
+     Type	 	AnsiChar	 	A character type guaranteed to be 8 bits in size
+     Type	 	AnsiString	 	A data type that holds a string of AnsiChars
+     Type	 	CHAR	 	Variable type holding a single character
+     Type	 	ShortString	 	Defines a string of up to 255 characters
+     Type	 	STRING	 	A data type that holds a string of characters
+     Type	 	WideChar	 	Variable type holding a single International character
+     Type	 	WideString	 	A data type that holds a string of WideChars
+  }
+
+  //Example: ShortString Type - Defines a string of up to 255 characters
+
+  // Assign to our small string
+  smallString := 'ABCD';
+  ShowMessageFmt('smallString size = %d',[SizeOf(smallString)]);
+  ShowMessageFmt('smallString = %S',[smallString]);
+  { Result
+    smallString size = 3
+    smallString = AB  }
+
+  // Assign to our slightly bigger string
+  smallString2 := 'ABCD';
+  ShowMessageFmt('smallString2 size = %d',[SizeOf(smallString2)]);
+  ShowMessageFmt('smallString2 = %S',[smallString2]);
+  { Result
+    smallishString size = 256
+    smallishString = ABCD  }
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  {  Função	 	AnsiCompareStr	 	Compare duas strings para igualdade (Upper case letters > Lower case letters OU Lower case letters > Numbers
+     Função	 	AnsiCompareText	 	Compare duas strings para igualdade, ignorando maiúsculas e minúsculas  oBS. Em delphi Letras> Números
+     Função	 	AnsiContainsStr	 	Retorna verdadeiro se uma string contém uma substring, diferencia maiúsculas de minúsculas - A função AnsiContainsStr procura por uma string Needle em uma string Haystack , retornando true se a encontrar. Caso contrário, falso.
+     Função	 	AnsiContainsText	 	Retorna verdadeiro se uma string contém uma substring, não diferencia maiúsculas de minúsculas
+     Função	 	AnsiEndsStr	 	Retorna verdadeiro se uma string termina com uma substring
+     Função	 	AnsiIndexStr	 	Compara uma string com uma lista de strings - retorna o índice de correspondência
+     Função	 	AnsiLeftStr	 	Extrai caracteres da esquerda de uma string
+     Função	 	AnsiLowerCase	 	Alterar caracteres maiúsculos em uma string para minúsculos
+     Função	 	AnsiMatchStr	 	Retorna verdadeiro se uma string corresponder exatamente a uma de uma lista de strings
+     Função	 	AnsiMidStr	 	Retorna uma substring dos caracteres do meio de uma string
+     Função	 	AnsiPos	 	Encontre a posição de uma corda na outra
+     Função	 	AnsiReplaceStr	 	Substitui uma parte de uma string por outra
+     Função	 	AnsiReverseString	 	Inverte a sequência de letras em uma string
+     Função	 	AnsiRightStr	 	Extrai caracteres da direita de uma string
+     Função	 	AnsiStartsStr	 	Retorna verdadeiro se uma string começar com uma substring
+     Função	 	AnsiUpperCase	 	Alterar caracteres minúsculos em uma string para maiúsculas
+     Procedimento	 	AppendStr	 	Concatene uma corda com a ponta da outra
+     Função	 	CompareStr	 	Compare duas strings para ver qual é maior que a outra
+     Função	 	CompareText	 	Compare duas strings para igualdade, ignorando maiúsculas e minúsculas
+     Função	 	Concat	 	Concatena uma ou mais strings em uma string
+     Função	 	cópia de	 	Crie uma cópia de parte de uma string ou array
+     Procedimento	 	Excluir	 	Exclua uma seção de caracteres de uma string
+     Função	 	DupeString	 	Cria uma string contendo cópias de uma substring
+     Função	 	Alto	 	Retorna o maior valor de um tipo ou variável
+     Procedimento	 	Inserir	 	Insira uma corda em outra corda
+     Função	 	LastDelimiter	 	Encontre a última posição dos caracteres selecionados em uma string
+     Função	 	Comprimento	 	Retorna o número de elementos em uma matriz ou string
+     Função	 	LowerCase	 	Alterar caracteres maiúsculos em uma string para minúsculos
+     Procedimento	 	Jogada	 	Copie bytes de dados de uma fonte para um destino
+     Função	 	Pos	 	Encontre a posição de uma corda na outra
+     Procedimento	 	ProcessPath	 	Divida uma string de unidade / caminho / nome de arquivo em suas partes constituintes
+     Procedimento	 	SetLength	 	Altera o tamanho de uma string ou o (s) tamanho (s) de uma matriz
+     Procedimento	 	SetString	 	Copia caracteres de um buffer em uma string
+     Função	 	StringOfChar	 	Cria uma string com um caractere repetido várias vezes
+     Função	 	StringReplace	 	Substitua uma ou mais substrings encontradas em uma string
+     Função	 	StrScan	 	Pesquisa um caractere específico em uma string constante
+     Função	 	StuffString	 	Substitui uma parte de uma string por outra
+     Modelo	 	TReplaceFlags	 	Define opções para a rotina StringReplace
+     Função	 	Aparar	 	Remove espaços em branco à esquerda e à direita de uma string
+     Função	 	TrimLeft	 	Remove os espaços em branco iniciais de uma string
+     Função	 	TrimRight	 	Remove espaços em branco à direita de uma string
+     Modelo	 	TStringList	 	Contém uma lista de strings de comprimento variável
+     Função	 	UpCase	 	Converter um valor Char em maiúsculas
+     Função	 	UpperCase	 	Alterar caracteres minúsculos em uma string para maiúsculas
+     Função	 	WrapText	 	Adicione alimentações de linha em uma string para simular a quebra de linha }
+end;
+
+procedure TForm1.Button5Click(Sender: TObject);
+begin
+  {  //CONVERSIONS FROM
+     Função	 	Formato	 	Formatação rica de números e texto em uma string
+     Função	 	StringToWideChar	 	Converte uma string normal em um buffer com terminação WideChar 0
+     Função	 	StrToCurr	 	Converta uma string numérica em um valor monetário
+     Função	 	StrToDate	 	Converte uma string de data em um valor TDateTime
+     Função	 	StrToDateTime	 	Converte uma string de data + hora em um valor TDateTime
+     Função	 	StrToFloat	 	Converte uma string numérica em um valor de ponto flutuante
+     Função	 	StrToInt	 	Converte uma string inteira em um valor inteiro
+     Função	 	StrToInt64	 	Converta uma string inteira em um valor Int64
+     Função	 	StrToInt64Def	 	Converta uma string em um valor Int64 com o padrão
+     Função	 	StrToIntDef	 	Converta uma string em um valor inteiro com o padrão
+     Função	 	StrToTime	 	Converte uma string de hora em um valor TDateTime
+     Modelo	 	TFormatSettings	 	Um registro para manter valores de localidade para funções thread-safe
+     Variável	 	TwoDigitYearCenturyWindow	 	Define o limite de século para conversões de sequência de anos de 2 dígitos
+     Procedimento	 	Val	 	Converte strings numéricas em valores inteiros e de ponto flutuante  }
+
+  {  CONVERSION TO
+     Variável	 	CurrencyDecimals	 	Define a contagem de dígitos decimais na função Format
+     Variável	 	CurrencyFormat	 	Define a colocação da string de moeda nas funções de exibição de moeda
+     Variável	 	CurrencyString	 	A string de moeda usada nas funções de exibição de moeda
+     Função	 	CurrToStrF	 	Converta um valor de moeda em uma string com formatação
+     Função	 	DateTimeToStr	 	Converte valores de data e hora TDateTime em uma string
+     Procedimento	 	DateTimeToString	 	Formatação rica de uma variável TDateTime em uma string
+     Função	 	DateToStr	 	Converte um valor de data TDateTime em uma string
+     Variável	 	Separador decimal	 	O caractere usado para exibir o ponto decimal
+     Função	 	FloatToStr	 	Converte um valor de ponto flutuante em uma string
+     Função	 	FloatToStrF	 	Converta um valor de ponto flutuante em uma string com formatação
+     Função	 	Formato	 	Formatação rica de números e texto em uma string
+     Função	 	FormatCurr	 	Formatação rica de um valor de moeda em uma string
+     Função	 	FormatDateTime	 	Formatação rica de uma variável TDateTime em uma string
+     Função	 	FormatFloat	 	Formatação rica de um número de ponto flutuante em uma string
+     Função	 	Caixa de entrada	 	Exibe uma caixa de diálogo que pede a entrada de texto do usuário, com o padrão
+     Função	 	InputQuery	 	Exibe uma caixa de diálogo que pede a entrada de texto do usuário
+     Função	 	IntToHex	 	Converter um inteiro em uma string hexadecimal
+     Função	 	IntToStr	 	Converte um inteiro em uma string
+     Variável	 	LongDateFormat	 	Versão longa da data para formato de string
+     Variável	 	LongDayNames	 	Uma matriz de nomes de dias da semana, começando 1 = domingo
+     Variável	 	LongMonthNames	 	Uma matriz de dias dos nomes dos meses, começando 1 = janeiro
+     Variável	 	LongTimeFormat	 	Versão longa do tempo para o formato da string
+     Variável	 	NegCurrFormat	 	Define a formatação do valor negativo em exibições de moeda
+     Função	 	Ord	 	Fornece o valor ordinal de um número inteiro, caractere ou enum
+     Variável	 	ShortDateFormat	 	Versão compacta da data para formato de string
+     Variável	 	ShortDayNames	 	Uma matriz de nomes de dias da semana, começando 1 = domingo
+     Variável	 	ShortMonthNames	 	Uma matriz de dias dos nomes dos meses, começando em 1 = janeiro
+     Variável	 	ShortTimeFormat	 	Versão curta do tempo para o formato da string
+     Procedimento	 	Str	 	Converte um número inteiro ou de ponto flutuante em uma string
+     Modelo	 	TFormatSettings	 	Um registro para manter valores de localidade para funções thread-safe
+     Variável	 	ThousandSeparator	 	O caractere usado para exibir o separador de milhares
+     Função	 	WideCharToString	 	Copia uma string WideChar terminada em nulo para uma string normal  }
+
+     { DISPLAYING
+
+       Função	 	Formato	 	Formatação rica de números e texto em uma string
+       Função	 	Caixa de entrada	 	Exibe uma caixa de diálogo que pede a entrada de texto do usuário, com o padrão
+       Função	 	InputQuery	 	Exibe uma caixa de diálogo que pede a entrada de texto do usuário
+       Função	 	MessageDlg	 	Exibe uma mensagem, símbolo e botões selecionáveis
+       Função	 	MessageDlgPos	 	Exibe uma mensagem mais botões em uma determinada posição da tela
+       Procedimento	 	Mostrar mensagem	 	Mostra uma string em uma caixa de diálogo simples com um botão OK
+       Procedimento	 	ShowMessageFmt	 	Exibir dados formatados em uma caixa de diálogo simples com um botão OK
+       Procedimento	 	ShowMessagePos	 	Exibe uma string em uma caixa de diálogo simples em uma determinada posição da tela
+       Modelo	 	TFloatFormat	 	Formatos para uso em funções de exibição de número de ponto flutuante
+       Modelo	 	TFormatSettings	 	Um registro para manter valores de localidade para funções thread-safe
+       Modelo	 	TPrintDialog	 	Classe que cria uma seleção de impressora e diálogo de controle  }
 end;
 
 end.
