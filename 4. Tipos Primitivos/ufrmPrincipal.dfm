@@ -71,4 +71,13 @@ object Form1: TForm1
     TabOrder = 4
     OnClick = Button5Click
   end
+  object Button6: TButton
+    Left = 24
+    Top = 192
+    Width = 161
+    Height = 25
+    Caption = 'FILES TYPES'
+    TabOrder = 5
+    OnClick = Button6Click
+  end
 end

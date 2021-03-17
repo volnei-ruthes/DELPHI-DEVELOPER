@@ -14,11 +14,13 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    Button6: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -422,6 +424,72 @@ begin
        Modelo	 	TFloatFormat	 	Formatos para uso em funções de exibição de número de ponto flutuante
        Modelo	 	TFormatSettings	 	Um registro para manter valores de localidade para funções thread-safe
        Modelo	 	TPrintDialog	 	Classe que cria uma seleção de impressora e diálogo de controle  }
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+type
+  RegFile = record
+    campo1:integer;
+    campo2:string[30];
+  end;
+
+var
+  myWord, myWord1, myWord2 : Word;
+  myFile : File of Word;
+  //Example 2
+  MeuArqBin: file of RegFile;
+begin
+  { Neste artigo veremos como manipular arquivos binários. Ainda hoje, algumas aplicações fazem uso de arquivos binários
+    para armazenar e trocar informações de maneira mais segura do que é possível com arquivos texto.
+    Arquivos binários guardam informações no "formato de máquina". Por isso, se um arquivo desse tipo for aberto em um editor de texto comum
+    não será possível a sua leitura de maneira compreensível. Para evitar que os dados fiquem desprotegidos, acessíveis para que
+    qualquer usuário possa ler, gravaríamos estas informações em formato binário. }
+
+  // Try to open the Test.bin binary file for writing to
+  AssignFile(myFile, 'Test.cus');
+  ReWrite(myFile); //ReWrite - Open a text or binary file for write access
+
+  // Write a couple of lines of Word data to the file
+  myWord1 := 234;
+  myWord2 := 567;
+  Write(myFile, myWord1, myWord2); //	Write data to a binary or text file. The write procedure writes a single line of data to a file
+
+  // Close the file
+  CloseFile(myFile);
+
+  // Reopen the file in read only mode
+  Reset(myFile); //The Reset procedure opens a file given by FileHandle for read, write or read and write access.
+  {
+    OBS:
+    Is for binary files. Before using Reset, you must set FileMode to one of the following:
+
+    fmOpenRead 	: Read only
+    fmOpenWrite 	: Write only
+    fmOpenReadWrite 	: Read and write
+
+    Exemple:
+    FileMode := fmOpenRead; // Reopen the file in read only mode
+    Reset(myFile);
+
+  }
+
+  // Display the file contents
+  while not Eof(myFile) do
+  begin
+    Read(myFile, myWord);
+    ShowMessage(IntToStr(myWord));
+  end;
+
+  // Close the file for the last time
+  CloseFile(myFile);
+
+  //***************************************************
+
+   AssignFile(MeuArqBin, 'Arq1.bin');
+   ReWrite(MeuArqBin);
+   //pulando record
+   //MeuArqBin.
+
 end;
 
 end.

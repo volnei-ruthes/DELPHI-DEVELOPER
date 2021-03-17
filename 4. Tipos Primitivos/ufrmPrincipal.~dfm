@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 355
   Top = 214
-  Width = 794
+  Width = 317
   Height = 270
   Caption = 'TIPOS PRIMITIVOS DE DADOS'
   Color = clBtnFace
@@ -27,8 +27,8 @@ object Form1: TForm1
     ParentFont = False
   end
   object Button1: TButton
-    Left = 224
-    Top = 80
+    Left = 24
+    Top = 128
     Width = 161
     Height = 25
     Caption = 'NUMBERS TYPES '
@@ -36,8 +36,8 @@ object Form1: TForm1
     OnClick = Button1Click
   end
   object Button2: TButton
-    Left = 216
-    Top = 128
+    Left = 24
+    Top = 160
     Width = 161
     Height = 25
     Caption = 'TEXT TYPES'
@@ -70,5 +70,14 @@ object Form1: TForm1
     Caption = 'CONVERSIONS FROM / TO'
     TabOrder = 4
     OnClick = Button5Click
+  end
+  object Button6: TButton
+    Left = 24
+    Top = 192
+    Width = 161
+    Height = 25
+    Caption = 'FILES TYPES'
+    TabOrder = 5
+    OnClick = Button6Click
   end
 end
