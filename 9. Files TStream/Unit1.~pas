@@ -62,6 +62,7 @@ type
     Button10: TButton;
     EdtBuffer: TEdit;
     memobuffer: TMemo;
+    ProgressBar1: TProgressBar;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -71,6 +72,7 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
   private
     { Private declarations }
     function IncCodigo(Stream : TStream; cInc : Integer) : Integer;
@@ -282,6 +284,43 @@ procedure TForm1.Button9Click(Sender: TObject);
 begin
   if(odFile.Execute)then
       EdtBuffer.Text:=odFile.FileName;
+end;
+
+procedure TForm1.Button10Click(Sender: TObject);
+ var
+   oStreamin,
+   oStreamout:TFileStream;
+   aBufferstream:array[0..1023]of Byte;
+   iByteRead:integer;
+   sFilename:string;
+begin
+  { TRABALHANDO COM BUFFERS - Quando trabalhamos com Streams é importante termos em mente que o conteúdo do Stream irá ocupar uma
+   certa quantidade de memória no computador. Em algumas situações pode ser importante que tenhamos um controle mais preciso desse espaço
+   e de como ele será manipulado. Esse maior controle pode ser conseguido com a técnica de “bufferização”, que consiste em
+   alocar previamente um espaço de memória onde o buffer irá trabalhar. é tbm importante destacar duas propriedades importantes
+   de um Stream, que são: Size e Position. Size retorna um inteiro com o tamanho ocupado pelo Stream, e Position também retorna
+   um inteiro com a posição atual do cursor de leitura do Stream. Assim como os datasets, Streams também possuem um cursor interno
+   responsável pela leitura dos dados.}
+
+   try
+      ProgressBar1.Position:=0;
+      sFilename:=EdtBuffer.Text;
+      oStreamin:=TFileStream.Create(sFilename,fmOpenRead);
+      oStreamout:=TFileStream.Create('temp.txt',fmCreate);
+
+      repeat
+         iByteRead:=oStreamin.Read(aBufferstream,1024);
+         oStreamout.Write(abufferstream,iByteRead);
+         ProgressBar1.StepBy(1);
+      until(iByteRead=0);
+      
+   finally
+      ProgressBar1.Position:=100;
+      FreeAndNil(oStreamin);
+      FreeAndNil(oStreamout);
+      Memo1.Lines.LoadFromFile('temp.txt');
+   end;
+
 end;
 
 end.

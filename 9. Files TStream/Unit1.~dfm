@@ -302,6 +302,7 @@ object Form1: TForm1
         Height = 25
         Caption = 'Copiar'
         TabOrder = 1
+        OnClick = Button10Click
       end
       object EdtBuffer: TEdit
         Left = 112
@@ -318,6 +319,13 @@ object Form1: TForm1
         Lines.Strings = (
           'memobuffer')
         TabOrder = 3
+      end
+      object ProgressBar1: TProgressBar
+        Left = 32
+        Top = 360
+        Width = 497
+        Height = 17
+        TabOrder = 4
       end
     end
   end

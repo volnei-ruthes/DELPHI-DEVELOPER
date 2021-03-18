@@ -18,7 +18,7 @@ object Form1: TForm1
     Top = 0
     Width = 641
     Height = 420
-    ActivePage = TabSheet6
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 0
     object TabSheet3: TTabSheet
@@ -161,6 +161,15 @@ object Form1: TForm1
           '> Fmopenwrite-  Abre o arquivo apenas para escrita;'
           '> Fmopenreadwrite- Abre o arquivo para leitura e escrita.')
         TabOrder = 4
+      end
+      object Button11: TButton
+        Left = 32
+        Top = 208
+        Width = 121
+        Height = 25
+        Caption = 'Modifica Data Arquivo'
+        TabOrder = 5
+        OnClick = Button11Click
       end
     end
     object TabSheet2: TTabSheet

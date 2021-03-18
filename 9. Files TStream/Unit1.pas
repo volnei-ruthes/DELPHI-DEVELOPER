@@ -63,6 +63,7 @@ type
     EdtBuffer: TEdit;
     memobuffer: TMemo;
     ProgressBar1: TProgressBar;
+    Button11: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -73,6 +74,7 @@ type
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
     procedure Button10Click(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
   private
     { Private declarations }
     function IncCodigo(Stream : TStream; cInc : Integer) : Integer;
@@ -321,6 +323,34 @@ begin
       Memo1.Lines.LoadFromFile('temp.txt');
    end;
 
+end;
+
+procedure TForm1.Button11Click(Sender: TObject);
+var
+  fileName    : string;
+  fileDate    : Integer;
+  newDateTime : TDateTime;
+
+begin
+  // Try to open the Unit1.DCU file for the current project
+  fileName := 'c:\teste.dat';
+  fileDate := FileAge(fileName);
+
+  // Did we get the file age OK?
+  if fileDate > -1 then
+  begin
+    ShowMessage(fileName+' last modified date = '+
+                DateTimeToStr(FileDateToDateTime(fileDate)));
+
+    // Now change the last modified date
+    newDateTime := StrToDateTime('01/01/2000 12:34:56');
+    FileSetDate(fileName, DateTimeToFileDate(newDateTime));
+  end;
+
+  // Did we update the file last modified date OK?
+  fileDate := FileAge(fileName);
+  if fileDate > -1 then
+    ShowMessage(fileName+' last modified date = '+ DateTimeToStr(FileDateToDateTime(fileDate)));
 end;
 
 end.
