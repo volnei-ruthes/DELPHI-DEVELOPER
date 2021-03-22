@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ConvUtils ;
+  Dialogs, StdCtrls, ConvUtils, Math ;
 
 type
   TForm1 = class(TForm)
@@ -17,6 +17,11 @@ type
     Button7: TButton;
     Button8: TButton;
     Button9: TButton;
+    Button10: TButton;
+    Button11: TButton;
+    Button12: TButton;
+    Button13: TButton;
+    Button14: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -26,6 +31,11 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
+    procedure Button12Click(Sender: TObject);
+    procedure Button13Click(Sender: TObject);
+    procedure Button14Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -525,7 +535,7 @@ begin
   // Display with the currency shown as a word after the amount
   CurrencyString := 'Pounds';
   CurrencyFormat := 4;    // 4 means after with a space
-  
+
   {The CurrencyFormat allowed values are :
     0 	= Before amount
     1 	= After amount
@@ -533,6 +543,189 @@ begin
     3 	= After amount with space }
     
   ShowMessage('Amount = '+CurrToStrF(amount, ffCurrency, 0));  //Amount = 12 Pounds
+
+end;
+
+procedure TForm1.Button10Click(Sender: TObject);
+var
+  amount : Currency;
+begin
+  // DecimalSeparator - The DecimalSeparator variable is used in currency and floating point display functions. DecimalSeparator value is '.' by default, depending on the Windows locale.
+
+
+  //Example code : Changing the decimal point character
+  amount := 12.34;    // 12 pounds 34 pence
+
+  // Display with the default decimal point character
+  ShowMessage('Amount = '+FloatToStrF(amount, ffCurrency, 10, 2));   //Amount = ?12.34
+
+  // Display with a new decimal point character
+  DecimalSeparator := '|';
+  ShowMessage('Amount = '+FloatToStrF(amount, ffCurrency, 10, 2));   //Amount = ?12|34
+
+end;
+
+procedure TForm1.Button11Click(Sender: TObject);
+var
+  i : Byte;
+
+begin
+  //Example code : Illustrate the 16 different negative formatting flavours
+
+
+  // Display the amount using all the flavours of NegCurrFormat
+  for i := 0 to 15 do
+  begin
+    NegCurrFormat := i;
+    ShowMessage('Format '+IntToStr(i)+' = '+Format('%m', [-1.23]));
+  end;
+
+  {Format 0 = (?1.23)
+   Format 1 = -?1.23
+   Format 2 = ?-1.23
+   Format 3 = ?1.23-
+   Format 4 = (1.23?)
+   Format 5 = -1.23?
+   Format 6 = 1.23-?
+   Format 7 = 1.23?-
+   Format 8 = -1.23 ?
+   Format 9 = -? 1.23
+   Format 10 = 1.23 ?-
+   Format 11 = ? 1.23-
+   Format 12 = ? -1.23
+   Format 13 = 1.23- ?
+   Format 14 = (? 1.23)
+   Format 15 = (1.23 ?)}
+
+  {The NegCurrFormat variable defines how negative currency amounts are formatted by such functions as FloatToStr and CurrToStr.
+ 
+    It is in effect an enumerated type, but with no names for the values. It is easiest to show their meanings by example, given below with an amount 1.23 and ? as the CurrencyString:
+
+    ?0 	= (?1.23)
+    ?1 	= -?1.23
+    ?2 	= ?-1.23
+    ?3 	= ?1.23-
+    ?4 	= (1.23?)
+    ?5 	= -1.23?
+    ?6 	= 1.23-?
+    ?7 	= 1.23?-
+    ?8 	= -1.23 ?
+    ?9 	= -? 1.23
+    10 	= 1.23 ?-
+    11 	= ? 1.23-
+    12 	= ? -1.23
+    13 	= 1.23- ?
+    14 	= (? 1.23)
+    15 	= (1.23 ?)   }
+end;
+
+procedure TForm1.Button12Click(Sender: TObject);
+var
+  float : single;
+  int   : Integer;
+  i     : Integer;
+
+begin
+   //random - The Random function generates random numbers. They can be floating point numbers in the range :
+
+  //Example code : Generate sets of floating point and integer numbers
+
+  // Get floating point random numbers in the range 0 <= Number < 1.0
+  for i := 1 to 5 do
+  begin
+    float := Random;
+    ShowMessage('float = '+FloatToStr(float));
+  end;
+
+  ShowMessage('');
+
+  // Get an integer random number in the range 1..100
+  for i := 1 to 5 do
+  begin
+    int := 1 + Random(100);    // The 100 value gives a range 0..99
+    ShowMessage('int = '+IntToStr(int));
+  end;
+
+  {float = 2.3283064365387E-10
+   float = 0.031379981256104
+   float = 0.861048460006714
+   float = 0.202580958604813
+   float = 0.2729212641716
+  
+  
+   int = 68
+   int = 32
+   int = 17
+   int = 38
+   int = 43}
+
+end;
+
+procedure TForm1.Button13Click(Sender: TObject);
+var
+  int   : Integer;
+  i     : Integer;
+
+begin
+  //Randomize - The Randomize procedure is used in conjunction with the Random function. It repositions the random number generator
+  //in its sequence of 232 pseudo random numbers. Randomize uses the time of day as the seed for this repositioning, so should provide
+  //a reliable method of creating an unpredictable sequence of numbers, even if they are a part of a predetermined sequence.
+
+
+  // If you run this program twice, only the first 5 values
+  // will be guaranteed to be the same each time - randomize
+  // repositions into a different part of the pseudo sequence
+  // of random numbers.
+
+  // Get an integer random number in the range 1..100
+  ShowMessage('Fixed first 5 random numbers');
+  for i := 1 to 5 do
+  begin
+    int := 1 + Random(100);    // The 100 value gives a range 0..99
+    ShowMessage('int = '+IntToStr(int));
+  end;
+
+  // Now randomize to reposition
+  Randomize;
+  ShowMessage('');
+
+  // Get an integer random number in the range 1..100
+  ShowMessage('Random next 5 numbers');
+  for i := 1 to 5 do
+  begin
+    int := 1 + Random(100);    // The 100 value gives a range 0..99
+    ShowMessage('int = '+IntToStr(int));
+  end;
+
+  {Fixed first 5 random numbers
+   int = 1
+   int = 4
+   int = 87
+   int = 21
+   int = 28
+  
+   Random next 5 numbers
+   int = 35
+   int = 74
+   int = 45
+   int = 50
+   int = 31}
+
+end;
+
+procedure TForm1.Button14Click(Sender: TObject);
+var
+  i : Integer;
+begin
+  //Description The RandomRange (uses Math ) function generates a random Integer number within the range RangeFrom to RangeTo inclusively. *
+  //This provides a more convenient version of the System unit Random function. Both use a pseudo random number sequence of 232 values.
+  // Each time you run your program, the values generated will be the same, unless you reposition the generator to a different part
+  //of the sequence using the Randomize or RandSeed functions.
+  
+  // Show 5 random numbers in the range 652 to 656
+  for i := 1 to 5 do
+
+    ShowMessage('Random number : '+IntToStr(RandomRange(652, 656)));
 
 end;
 

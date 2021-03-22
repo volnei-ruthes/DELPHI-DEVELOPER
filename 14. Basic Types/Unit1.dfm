@@ -94,4 +94,49 @@ object Form1: TForm1
     TabOrder = 8
     OnClick = Button9Click
   end
+  object Button10: TButton
+    Left = 128
+    Top = 72
+    Width = 105
+    Height = 25
+    Caption = 'DecimalSeparator'
+    TabOrder = 9
+    OnClick = Button10Click
+  end
+  object Button11: TButton
+    Left = 128
+    Top = 104
+    Width = 105
+    Height = 25
+    Caption = 'NegCurrFormat'
+    TabOrder = 10
+    OnClick = Button11Click
+  end
+  object Button12: TButton
+    Left = 128
+    Top = 136
+    Width = 105
+    Height = 25
+    Caption = 'Random'
+    TabOrder = 11
+    OnClick = Button12Click
+  end
+  object Button13: TButton
+    Left = 128
+    Top = 168
+    Width = 105
+    Height = 25
+    Caption = 'Randomize'
+    TabOrder = 12
+    OnClick = Button13Click
+  end
+  object Button14: TButton
+    Left = 128
+    Top = 200
+    Width = 105
+    Height = 25
+    Caption = 'RandomRange'
+    TabOrder = 13
+    OnClick = Button14Click
+  end
 end
