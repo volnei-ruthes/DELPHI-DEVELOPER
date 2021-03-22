@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 125
   Width = 928
   Height = 480
-  Caption = 'DELPHI BASIC TYPES'
+  Caption = 'DELPHI BASIC TYPES, VARIABLES, '
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -57,5 +57,41 @@ object Form1: TForm1
     Caption = 'TReplaceFlags'
     TabOrder = 4
     OnClick = Button5Click
+  end
+  object Button6: TButton
+    Left = 16
+    Top = 168
+    Width = 105
+    Height = 25
+    Caption = 'TSearchRec'
+    TabOrder = 5
+    OnClick = Button6Click
+  end
+  object Button7: TButton
+    Left = 16
+    Top = 200
+    Width = 105
+    Height = 25
+    Caption = 'TSysCharSet'
+    TabOrder = 6
+    OnClick = Button7Click
+  end
+  object Button8: TButton
+    Left = 128
+    Top = 8
+    Width = 105
+    Height = 25
+    Caption = 'CurrencyDecimals'
+    TabOrder = 7
+    OnClick = Button8Click
+  end
+  object Button9: TButton
+    Left = 128
+    Top = 40
+    Width = 105
+    Height = 25
+    Caption = 'CurrencyString'
+    TabOrder = 8
+    OnClick = Button9Click
   end
 end

@@ -13,11 +13,19 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    Button6: TButton;
+    Button7: TButton;
+    Button8: TButton;
+    Button9: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -396,6 +404,136 @@ begin
   // Show the before and after
   ShowMessage('Before = '+before); //This is a way to live A big life
   ShowMessage('After  = '+after); //This is THE way to live THE big life  
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+var
+  searchResult : TSearchRec;
+begin
+  //The TSearchRecord record type defines a data structure used to hold file search information for the FindFirst and FindNext routines.
+
+  // Try to find regular files matching Unit1.d* in the current dir
+  if FindFirst('Unit1.d*', faAnyFile, searchResult) = 0 then
+  begin
+    repeat
+      ShowMessage('File name = '+searchResult.Name);
+      ShowMessage('File size = '+IntToStr(searchResult.Size));
+    until FindNext(searchResult) <> 0;
+
+    // Must free up resources used by these successful finds
+    FindClose(searchResult);
+  end;
+
+  {File name = Unit1.dcu
+   File size = 4382
+   File name = Uni1.dfm
+   File size = 524
+   File name = Uni1.ddp
+   File size = 51}
+
+
+
+  {Time 	= Last modified file date and time	
+  Size 	= File size in bytes
+  Attr 	= File attributes
+  Name 	= File name
+
+
+  Where Attr can have these values :
+
+  faAnyFile 	: Any file
+  faReadOnly 	: Read-only files
+  faHidden 	: Hidden files
+  faSysFile 	: System files
+  faVolumeID 	: Volume ID files
+  faDirectory 	: Directory files
+  faArchive 	: Archive files }
+end;
+
+procedure TForm1.Button7Click(Sender: TObject);
+var
+  switchPrefixes : TSysCharSet;
+
+begin
+  //TSysCharSet - The TSysCharSet type is used as a general type for setting special characters during Delphi string parsing functions. 
+  //For example, the FindCmdLineSwitch can be configured to search for user defined command line 'switch' value prefix characters.
+  
+  // Before running this code, use the Run/parameters menu option
+  // to set the following command line parameters : *def /abc
+  ShowMessage(CmdLine);     // Show the execution command + parameters
+
+  // How many parameters were passed?
+  ShowMessage('There are '+IntToStr(ParamCount)+' parameters');
+
+  // Scan for abc and def parameters using the default / and - values
+  if FindCmdLineSwitch('abc')
+  then ShowMessage('/abc found')
+  else ShowMessage('/abc NOT found');
+
+  if FindCmdLineSwitch('def')
+  then ShowMessage('/def found')
+  else ShowMessage('/def NOT found');
+
+  // Rescan with * and / as the switch prefix characters
+  switchPrefixes := ['*','/'];
+  if FindCmdLineSwitch('abc', switchPrefixes, True)
+  then ShowMessage('*abc or /abc found')
+  else ShowMessage('*abc and /abc NOT found');
+
+  if FindCmdLineSwitch('def', switchPrefixes, True)
+  then ShowMessage('*def or /def found')
+  else ShowMessage('*def and /def NOT found');
+
+  {"C:\Program files\Borland\Delphi7\Projects\Project1.exe" *def /abc
+   /abc found
+   /def NOT found
+   *abc or /abc found
+   *def or /def found}
+
+end;
+
+procedure TForm1.Button8Click(Sender: TObject);
+var
+  amount : Double;
+begin
+  //CurrencyDecimals - The CurrencyDecimals variable provides a default number of decimal digits for the Format and related functions.
+
+  //Example code : Change the default decimal digits from 2 to 4
+  amount := 1234.567;
+
+  // Display the amount using the default decimal digits (2)
+  ShowMessage('Amount = '+Format('%m', [amount]));    //Amount = ?1,234.57
+
+  // Redisplay the amount with 4 decimal digits
+  CurrencyDecimals := 4;
+  ShowMessage('Amount = '+Format('%m', [amount]));  //Amount = ?1,234.5670 
+end;
+
+procedure TForm1.Button9Click(Sender: TObject);
+var
+  amount : Currency;
+
+begin
+  //The CurrencyString variable is used in currency display functions. It is used to prefix or suffix the currency amount.
+  //For example, the UK default is ?, so 1.23 is displayed as ?1.23 by default.
+  
+  amount := 12;    // 12 pounds
+
+  // Display with the default currency string
+  ShowMessage('Amount = '+CurrToStrF(amount, ffCurrency, 0));  //Amount = ?12
+
+  // Display with the currency shown as a word after the amount
+  CurrencyString := 'Pounds';
+  CurrencyFormat := 4;    // 4 means after with a space
+  
+  {The CurrencyFormat allowed values are :
+    0 	= Before amount
+    1 	= After amount
+    2 	= Before amount with space
+    3 	= After amount with space }
+    
+  ShowMessage('Amount = '+CurrToStrF(amount, ffCurrency, 0));  //Amount = 12 Pounds
+
 end;
 
 end.
