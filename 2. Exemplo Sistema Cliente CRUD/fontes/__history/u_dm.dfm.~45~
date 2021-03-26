@@ -1,0 +1,312 @@
+object dm: Tdm
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 644
+  Width = 874
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'Database=sistema'
+      'User_Name=root'
+      'DriverID=MySQL')
+    Connected = True
+    LoginPrompt = False
+    Left = 176
+    Top = 8
+  end
+  object driver: TFDPhysMySQLDriverLink
+    VendorLib = 
+      'C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects' +
+      '\SistemaCrudCliente\libmySQL.dll'
+    Left = 16
+    Top = 8
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 88
+    Top = 8
+  end
+  object tb_clientes: TFDTable
+    IndexFieldNames = 'clie_id'
+    Connection = FDConnection1
+    UpdateOptions.UpdateTableName = 'sistema.clientes'
+    TableName = 'sistema.clientes'
+    Left = 48
+    Top = 72
+    object tb_clientesclie_id: TFDAutoIncField
+      FieldName = 'clie_id'
+      Origin = 'clie_id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object tb_clientesclie_nome: TStringField
+      FieldName = 'clie_nome'
+      Origin = 'clie_nome'
+      Required = True
+      Size = 100
+    end
+    object tb_clientesclie_endereco: TStringField
+      FieldName = 'clie_endereco'
+      Origin = 'clie_endereco'
+      Required = True
+      Size = 100
+    end
+    object tb_clientesclie_bairro: TStringField
+      FieldName = 'clie_bairro'
+      Origin = 'clie_bairro'
+      Required = True
+      Size = 100
+    end
+    object tb_clientesclie_cidade: TStringField
+      FieldName = 'clie_cidade'
+      Origin = 'clie_cidade'
+      Required = True
+      Size = 50
+    end
+    object tb_clientesclie_uf: TStringField
+      FieldName = 'clie_uf'
+      Origin = 'clie_uf'
+      Required = True
+      Size = 50
+    end
+    object tb_clientesclie_rg: TStringField
+      FieldName = 'clie_rg'
+      Origin = 'clie_rg'
+      Required = True
+      Size = 30
+    end
+    object tb_clientesclie_cpf: TStringField
+      FieldName = 'clie_cpf'
+      Origin = 'clie_cpf'
+      Required = True
+      EditMask = '000\.000\.000\.00;0;_'
+      Size = 30
+    end
+    object tb_clientesclie_tel: TStringField
+      FieldName = 'clie_tel'
+      Origin = 'clie_tel'
+      Required = True
+      EditMask = '!\(99\)0000-0000;0;_'
+    end
+    object tb_clientesclie_email: TStringField
+      FieldName = 'clie_email'
+      Origin = 'clie_email'
+      Required = True
+      Size = 100
+    end
+    object tb_clientesclie_dtnasc: TDateField
+      FieldName = 'clie_dtnasc'
+      Origin = 'clie_dtnasc'
+      Required = True
+      EditMask = '!99/99/0000;1;_'
+    end
+    object tb_clientesclie_dtcad: TDateField
+      FieldName = 'clie_dtcad'
+      Origin = 'clie_dtcad'
+      Required = True
+    end
+    object tb_clientesclie_situacao: TStringField
+      FieldName = 'clie_situacao'
+      Origin = 'clie_situacao'
+      Required = True
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = tb_clientes
+    Left = 248
+    Top = 8
+  end
+  object FDQuery_Cons_Cliente: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'select * from clientes')
+    Left = 48
+    Top = 120
+    object FDQuery_Cons_Clienteclie_id: TFDAutoIncField
+      FieldName = 'clie_id'
+      Origin = 'clie_id'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object FDQuery_Cons_Clienteclie_nome: TStringField
+      FieldName = 'clie_nome'
+      Origin = 'clie_nome'
+      Required = True
+      Size = 100
+    end
+    object FDQuery_Cons_Clienteclie_endereco: TStringField
+      FieldName = 'clie_endereco'
+      Origin = 'clie_endereco'
+      Required = True
+      Size = 100
+    end
+    object FDQuery_Cons_Clienteclie_bairro: TStringField
+      FieldName = 'clie_bairro'
+      Origin = 'clie_bairro'
+      Required = True
+      Size = 100
+    end
+    object FDQuery_Cons_Clienteclie_cidade: TStringField
+      FieldName = 'clie_cidade'
+      Origin = 'clie_cidade'
+      Required = True
+      Size = 50
+    end
+    object FDQuery_Cons_Clienteclie_uf: TStringField
+      FieldName = 'clie_uf'
+      Origin = 'clie_uf'
+      Required = True
+      Size = 50
+    end
+    object FDQuery_Cons_Clienteclie_rg: TStringField
+      FieldName = 'clie_rg'
+      Origin = 'clie_rg'
+      Required = True
+      Size = 30
+    end
+    object FDQuery_Cons_Clienteclie_cpf: TStringField
+      FieldName = 'clie_cpf'
+      Origin = 'clie_cpf'
+      Required = True
+      Size = 30
+    end
+    object FDQuery_Cons_Clienteclie_tel: TStringField
+      FieldName = 'clie_tel'
+      Origin = 'clie_tel'
+      Required = True
+    end
+    object FDQuery_Cons_Clienteclie_email: TStringField
+      FieldName = 'clie_email'
+      Origin = 'clie_email'
+      Required = True
+      Size = 100
+    end
+    object FDQuery_Cons_Clienteclie_dtnasc: TDateField
+      FieldName = 'clie_dtnasc'
+      Origin = 'clie_dtnasc'
+      Required = True
+    end
+    object FDQuery_Cons_Clienteclie_dtcad: TDateField
+      FieldName = 'clie_dtcad'
+      Origin = 'clie_dtcad'
+      Required = True
+    end
+    object FDQuery_Cons_Clienteclie_situacao: TStringField
+      FieldName = 'clie_situacao'
+      Origin = 'clie_situacao'
+      Required = True
+    end
+  end
+  object DS_Cons_Cliente: TDataSource
+    DataSet = FDQuery_Cons_Cliente
+    Left = 48
+    Top = 168
+  end
+  object FDQuery_ImprimeCliente: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'select * from clientes')
+    Left = 48
+    Top = 248
+    object FDQuery_ImprimeClienteclie_id: TFDAutoIncField
+      FieldName = 'clie_id'
+      Origin = 'clie_id'
+      ProviderFlags = [pfInWhere, pfInKey]
+    end
+    object FDQuery_ImprimeClienteclie_nome: TStringField
+      FieldName = 'clie_nome'
+      Origin = 'clie_nome'
+      Required = True
+      Size = 100
+    end
+    object FDQuery_ImprimeClienteclie_endereco: TStringField
+      FieldName = 'clie_endereco'
+      Origin = 'clie_endereco'
+      Required = True
+      Size = 100
+    end
+    object FDQuery_ImprimeClienteclie_bairro: TStringField
+      FieldName = 'clie_bairro'
+      Origin = 'clie_bairro'
+      Required = True
+      Size = 100
+    end
+    object FDQuery_ImprimeClienteclie_cidade: TStringField
+      FieldName = 'clie_cidade'
+      Origin = 'clie_cidade'
+      Required = True
+      Size = 50
+    end
+    object FDQuery_ImprimeClienteclie_uf: TStringField
+      FieldName = 'clie_uf'
+      Origin = 'clie_uf'
+      Required = True
+      Size = 50
+    end
+    object FDQuery_ImprimeClienteclie_rg: TStringField
+      FieldName = 'clie_rg'
+      Origin = 'clie_rg'
+      Required = True
+      Size = 30
+    end
+    object FDQuery_ImprimeClienteclie_cpf: TStringField
+      FieldName = 'clie_cpf'
+      Origin = 'clie_cpf'
+      Required = True
+      Size = 30
+    end
+    object FDQuery_ImprimeClienteclie_tel: TStringField
+      FieldName = 'clie_tel'
+      Origin = 'clie_tel'
+      Required = True
+    end
+    object FDQuery_ImprimeClienteclie_email: TStringField
+      FieldName = 'clie_email'
+      Origin = 'clie_email'
+      Required = True
+      Size = 100
+    end
+    object FDQuery_ImprimeClienteclie_dtnasc: TDateField
+      FieldName = 'clie_dtnasc'
+      Origin = 'clie_dtnasc'
+      Required = True
+    end
+    object FDQuery_ImprimeClienteclie_dtcad: TDateField
+      FieldName = 'clie_dtcad'
+      Origin = 'clie_dtcad'
+      Required = True
+    end
+    object FDQuery_ImprimeClienteclie_situacao: TStringField
+      FieldName = 'clie_situacao'
+      Origin = 'clie_situacao'
+      Required = True
+    end
+  end
+  object rpt_Cliente: TfrxReport
+    Version = '6.2.1'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick, pbCopy, pbSelection]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Default'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 44280.864343530090000000
+    ReportOptions.LastChange = 44280.864343530090000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      'begin'
+      ''
+      'end.')
+    Left = 48
+    Top = 352
+    Datasets = <>
+    Variables = <>
+    Style = <>
+  end
+  object ds_rel_cliente: TfrxDBDataset
+    UserName = 'ds_rel_cliente'
+    CloseDataSource = False
+    DataSet = FDQuery_ImprimeCliente
+    BCDToCurrency = False
+    Left = 48
+    Top = 296
+  end
+end

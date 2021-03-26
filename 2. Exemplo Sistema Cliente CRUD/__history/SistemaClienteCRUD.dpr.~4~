@@ -1,0 +1,18 @@
+program SistemaClienteCRUD;
+
+uses
+  Vcl.Forms,
+  u_principal in 'fontes\u_principal.pas' {frm_principal},
+  u_dm in 'fontes\u_dm.pas' {DataModule1: TDataModule},
+  u_clientes in 'fontes\u_clientes.pas' {Form1};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(Tfrm_principal, frm_principal);
+  Application.CreateForm(TDataModule1, DataModule1);
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2021/03/23 15:59:41.000.125,=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/03/23 16:35:56.000.737,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\fontes\u_principal.dfm</Transaction>
+    <Transaction>2021/03/23 16:35:56.000.737,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\fontes\u_principal.pas</Transaction>
+    <Transaction>2021/03/23 16:36:23.000.253,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\SistemaClienteCRUD.dproj</Transaction>
+    <Transaction>2021/03/23 18:49:51.000.042,=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\Unit1.pas</Transaction>
+    <Transaction>2021/03/23 18:50:44.000.217,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\fontes\u_dm.dfm=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\Unit1.dfm</Transaction>
+    <Transaction>2021/03/23 18:50:44.000.217,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\fontes\u_dm.pas=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\Unit1.pas</Transaction>
+    <Transaction>2021/03/23 20:03:23.000.605,=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\Unit1.pas</Transaction>
+    <Transaction>2021/03/23 20:03:54.000.163,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\fontes\u_clientes.pas=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\Unit1.pas</Transaction>
+    <Transaction>2021/03/23 20:03:54.000.163,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\fontes\u_clientes.dfm=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\SISTEMA CRUD Cliente Delphi Community\Unit1.dfm</Transaction>
+    <Transaction>2021/03/23 21:02:34.000.886,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Sistema CrudCliente Delphi\fontes\u_dm.pas=</Transaction>
+    <Transaction>2021/03/23 21:03:39.000.739,=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Sistema CrudCliente Delphi\Unit1.pas</Transaction>
+    <Transaction>2021/03/23 21:03:53.000.595,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Sistema CrudCliente Delphi\fontes\u_dm.pas=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Sistema CrudCliente Delphi\Unit1.pas</Transaction>
+    <Transaction>2021/03/23 21:03:53.000.595,C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Sistema CrudCliente Delphi\fontes\u_dm.dfm=C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects\Sistema CrudCliente Delphi\Unit1.dfm</Transaction>
+  </Transactions>
+</BorlandProject>
