@@ -1,0 +1,63 @@
+unit u_login;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.jpeg,
+  Vcl.Imaging.pngimage, Vcl.StdCtrls, Vcl.Buttons;
+
+type
+  Tfrm_login = class(TForm)
+    Panel1: TPanel;
+    imgfundo: TImage;
+    pnl_login: TPanel;
+    img_login: TImage;
+    edt_loginUserName: TEdit;
+    edt_loginPassword: TEdit;
+    btn_loginEntrar: TSpeedButton;
+    procedure FormCanResize(Sender: TObject; var NewWidth, NewHeight: Integer;
+      var Resize: Boolean);
+    procedure btn_loginEntrarClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure centralizaPainelLogin;
+    procedure login;
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_login: Tfrm_login;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tfrm_login.btn_loginEntrarClick(Sender: TObject);
+begin
+  if edt_loginUserName = '' then begin
+    showmessage('Preencha o usuário');
+  end;
+  login;
+end;
+
+procedure Tfrm_login.centralizaPainelLogin;
+begin
+  //posicionar o panel login no centro do form.
+  pnl_login.Top := (self.Height div 2) - pnl_login.Height div 2;
+  pnl_login.Left := (self.Width div 2) - pnl_login.Width div 2;
+end;
+
+procedure Tfrm_login.FormCanResize(Sender: TObject; var NewWidth,  NewHeight: Integer; var Resize: Boolean);
+begin
+   //Ajusta Responsividade.
+   centralizaPainelLogin; //OnCanResize executa sempre quando for dimensionado o form.
+end;
+
+procedure Tfrm_login.login;
+begin
+  //
+end;
+
+end.

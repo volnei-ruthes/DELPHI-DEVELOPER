@@ -1,0 +1,173 @@
+unit u_geralHelper;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,Vcl.Buttons, Vcl.StdCtrls, Data.DB, Vcl.ExtCtrls;
+
+type  { HELPERS }
+
+  //Verifica se o EDIT é vazio.
+  TEditHelper = class helper for TEdit
+    function isVazio:boolean;
+  end;
+
+  //Aviso Sistema
+  TAviso = class helper for TForm
+    procedure AvisoAlerta(pMsg:PWideChar);
+    procedure Aviso(pMsg:PWideChar);
+  end;
+
+   //Image Sistema
+  TImagem = class helper for TForm
+    procedure ExibeImgProduto(DataSet : TDataSet; BlobFieldName : String; ImageExibicao : TImage);
+  end;
+
+  //Formata valores currency.
+  TDoubleHelper = record helper for double
+    function valorMonetario(pTipoFormat:string) : string;
+  end;
+
+//Op. Ternários
+function If_v(const cond:boolean;const v1,v2:variant):variant;
+function If_s(const cond:boolean;const v1,v2:string):string;
+function If_i(const cond:boolean;const v1,v2:integer):integer;
+function If_r(const cond:boolean;const v1,v2:real):real;
+function If_b(const cond:boolean;const v1,v2:boolean):boolean;
+function If_c(const cond:boolean;const v1,v2:currency):currency;
+function If_d(const cond:boolean;const v1,v2:TDateTime):TDateTime;
+//Funções gerais
+function TextToCurr(Texto: String): Currency;
+
+implementation
+
+//-----------------------FUNÇÕES GERAIS
+
+
+uses u_dm;
+
+function TextToCurr(Texto: String): Currency;    //Converte texto em numeros.
+var I: Integer;
+    TextoLimpo: String;
+begin
+  TextoLimpo := '';
+  For I := 1 to Length(Texto) do
+  begin
+    if Texto[I] in ['0'..'9',','] then begin
+      TextoLimpo := TextoLimpo + Texto[I];
+    end;
+    Result := StrToCurr(TextoLimpo);
+  end;
+end;
+
+function StrToStrDigitos(const Str:String):String; //Só retorna números de uma string.
+var i:integer;
+begin
+  Result:='';
+  for i:=1 to Length(Str) do begin
+      if Str[i] in ['1','2','3','4','5','6','7','8','9','0'] then Result:=Result+Str[i];
+  end;
+end;
+
+function FinalStr(const Str:String;const n:integer):String; //Retorna o final da string (str, integer (que ira tirar do começo da string e devolver o restante).
+begin
+  Result:='';
+  if Length(Str)>=(n) then Result:=Copy(Str,n,Length(Str)-n+1);
+end;
+
+//--Operadores Ternários:
+
+function If_v(const cond:boolean;const v1,v2:variant):variant; //Operador Ternário Variant
+begin
+  if cond then result:=v1 else result:=v2;
+end;
+
+function If_s(const cond:boolean;const v1,v2:string):string;  //Operador Ternário string
+begin
+  if cond then result:=v1 else result:=v2;
+end;
+
+function If_i(const cond:boolean;const v1,v2:integer):integer;  //Operador Ternário integer
+begin
+  if cond then result:=v1 else result:=v2;
+end;
+
+function If_r(const cond:boolean;const v1,v2:real):real;   //Operador Ternário real
+begin
+  if cond then result:=v1 else result:=v2;
+end;
+
+function If_b(const cond:boolean;const v1,v2:boolean):boolean;  //Operador Ternário boolean
+begin
+  if cond then result:=v1 else result:=v2;
+end;
+
+function If_c(const cond:boolean;const v1,v2:currency):currency; //Operador Ternário currency
+begin
+  if cond then result:=v1 else result:=v2;
+end;
+
+function If_d(const cond:boolean;const v1,v2:TDateTime):TDateTime; //Operador Ternário TDateTime
+begin
+  if cond then result:=v1 else result:=v2;
+end;
+
+
+//---------------------------FUNCÕES HELPERS
+
+{ TEditHelper }
+
+function TEditHelper.isVazio: boolean;
+begin
+  result := trim(self.Text) = EmptyStr;
+end;
+
+{ TDoubleHelper }
+
+function TDoubleHelper.valorMonetario(pTipoFormat: string): string;
+begin
+  result := FormatFloat(pTipoFormat, Self);  //ex. TipFormat 'R$ ###,##0.00'
+end;
+
+{ TAviso }
+
+procedure TAviso.Aviso(pMsg: PWideChar);
+begin
+  Application.MessageBox(pMsg,'Informação',MB_OK + MB_ICONINFORMATION)
+end;
+
+procedure TAviso.AvisoAlerta(pMsg:PWideChar);
+begin
+   //MessageDlg(pMsg,mtWarning,mbOKCancel,0);
+   Application.MessageBox(pMsg,'Alerta!',MB_OK + MB_ICONWARNING)
+end;
+
+{ TImage }
+
+procedure TImagem.ExibeImgProduto(DataSet: TDataSet; BlobFieldName: String;  ImageExibicao: TImage);
+const
+  OffsetMemoryStream : Int64 = 0;
+var
+  MemoryStream:TMemoryStream;   //img no banco esta binario (codificada), o memory stream ajuda a decodificar essa img.
+  jpg : TPicture;
+begin
+  if not(DataSet.IsEmpty) and not((DataSet.FieldByName(BlobFieldName) as TBlobField).IsNull) then begin
+    try
+      MemoryStream := TMemoryStream.Create;
+      Jpg := TPicture.Create;
+      (DataSet.FieldByName(BlobFieldName) as
+      TBlobField).SaveToStream(MemoryStream);
+      MemoryStream.Position := OffsetMemoryStream;
+      Jpg.LoadFromStream(MemoryStream);
+      ImageExibicao.Picture.Assign(Jpg);
+    finally
+      MemoryStream.Free; // Jpg.Free;
+    end
+  end else begin
+    ImageExibicao.Picture := Nil;
+  end;
+
+end;
+
+end.

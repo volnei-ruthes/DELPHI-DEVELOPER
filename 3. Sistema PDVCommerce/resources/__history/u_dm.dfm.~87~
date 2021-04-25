@@ -1,0 +1,341 @@
+object DM: TDM
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 609
+  Width = 1065
+  object FDConnection: TFDConnection
+    Params.Strings = (
+      'Database=pdv'
+      'User_Name=root'
+      'DriverID=MySQL')
+    Connected = True
+    LoginPrompt = False
+    Left = 488
+    Top = 16
+  end
+  object DriveMySQL: TFDPhysMySQLDriverLink
+    VendorLib = 
+      'C:\Users\desenvolvimento01\Documents\Embarcadero\Studio\Projects' +
+      '\2.SistemaPDVCommerce\libmySQL.dll'
+    Left = 24
+    Top = 8
+  end
+  object FDTableCargos: TFDTable
+    IndexFieldNames = 'id'
+    Connection = FDConnection
+    UpdateOptions.UpdateTableName = 'pdv.cargos'
+    TableName = 'pdv.cargos'
+    Left = 40
+    Top = 128
+  end
+  object FDQuery_cargos: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      'select * from cargos')
+    Left = 40
+    Top = 184
+  end
+  object DataSourceCargos: TDataSource
+    DataSet = FDQuery_cargos
+    Left = 40
+    Top = 232
+  end
+  object FDTableFuncionarios: TFDTable
+    IndexFieldNames = 'id'
+    Connection = FDConnection
+    UpdateOptions.UpdateTableName = 'pdv.funcionarios'
+    TableName = 'pdv.funcionarios'
+    Left = 160
+    Top = 128
+  end
+  object FDQuery_funcionarios: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      'select * from funcionarios')
+    Left = 160
+    Top = 184
+  end
+  object DataSourceFuncionarios: TDataSource
+    DataSet = FDQuery_funcionarios
+    Left = 160
+    Top = 232
+  end
+  object FDTableUsuarios: TFDTable
+    IndexFieldNames = 'id'
+    Connection = FDConnection
+    UpdateOptions.UpdateTableName = 'pdv.usuarios'
+    TableName = 'pdv.usuarios'
+    Left = 280
+    Top = 128
+  end
+  object FDQuery_Usuarios: TFDQuery
+    IndexesActive = False
+    Connection = FDConnection
+    SQL.Strings = (
+      'select * from usuarios')
+    Left = 280
+    Top = 184
+  end
+  object DataSourceUsuarios: TDataSource
+    DataSet = FDQuery_Usuarios
+    Left = 280
+    Top = 232
+  end
+  object FDTableFornecedores: TFDTable
+    IndexFieldNames = 'id'
+    Connection = FDConnection
+    UpdateOptions.UpdateTableName = 'pdv.fornecedores'
+    TableName = 'pdv.fornecedores'
+    Left = 400
+    Top = 128
+  end
+  object FDQuery_fornecedores: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      'select * from fornecedores')
+    Left = 400
+    Top = 184
+  end
+  object DataSourceFornecedores: TDataSource
+    DataSet = FDQuery_fornecedores
+    Left = 400
+    Top = 232
+  end
+  object FDTableProdutos: TFDTable
+    Connection = FDConnection
+    Left = 512
+    Top = 128
+  end
+  object FDQuery_produtos: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      'select * from produtos')
+    Left = 512
+    Top = 184
+  end
+  object DataSourceProdutos: TDataSource
+    DataSet = FDQuery_produtos
+    Left = 512
+    Top = 232
+  end
+  object FDQueryEntradaProdutos: TFDQuery
+    IndexesActive = False
+    Connection = FDConnection
+    SQL.Strings = (
+      
+        'SELECT * FROM entrada_produtos INNER JOIN fornecedores on entrad' +
+        'a_produtos.fornecedor_id = fornecedores.id order by data desc')
+    Left = 616
+    Top = 184
+    object FDQueryEntradaProdutosid: TFDAutoIncField
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object FDQueryEntradaProdutosproduto: TStringField
+      FieldName = 'produto'
+      Origin = 'produto'
+      Required = True
+      Size = 50
+    end
+    object FDQueryEntradaProdutosproduto_id: TIntegerField
+      FieldName = 'produto_id'
+      Origin = 'produto_id'
+      Required = True
+    end
+    object FDQueryEntradaProdutosquantidade: TIntegerField
+      FieldName = 'quantidade'
+      Origin = 'quantidade'
+      Required = True
+    end
+    object FDQueryEntradaProdutosfornecedor_id: TIntegerField
+      FieldName = 'fornecedor_id'
+      Origin = 'fornecedor_id'
+      Required = True
+    end
+    object FDQueryEntradaProdutosvalor: TBCDField
+      FieldName = 'valor'
+      Origin = 'valor'
+      Required = True
+      Precision = 10
+      Size = 2
+    end
+    object FDQueryEntradaProdutostotal: TBCDField
+      FieldName = 'total'
+      Origin = 'total'
+      Required = True
+      Precision = 10
+      Size = 2
+    end
+    object FDQueryEntradaProdutosdata: TDateField
+      FieldName = 'data'
+      Origin = 'data'
+      Required = True
+    end
+    object FDQueryEntradaProdutosnome: TStringField
+      FieldName = 'nome'
+      Size = 30
+    end
+  end
+  object DataSourceEntradaProdutos: TDataSource
+    DataSet = FDQueryEntradaProdutos
+    Left = 616
+    Top = 232
+  end
+  object FDQuerySaidaProdutos: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      'select * from saida_produtos')
+    Left = 736
+    Top = 184
+  end
+  object DataSourceSaidaProdutos: TDataSource
+    AutoEdit = False
+    DataSet = FDQuerySaidaProdutos
+    Left = 736
+    Top = 232
+  end
+  object FDQueryVendasC: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      'select * from vendas_pdv_c')
+    Left = 848
+    Top = 184
+  end
+  object DataSourceVendasC: TDataSource
+    DataSet = FDQueryVendasC
+    Left = 848
+    Top = 232
+  end
+  object FDQueryVendasD: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      'select * from vendas_pdv_d')
+    Left = 952
+    Top = 184
+    object FDQueryVendasDid: TFDAutoIncField
+      DisplayLabel = 'ID'
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object FDQueryVendasDvendas_id: TIntegerField
+      FieldName = 'vendas_id'
+      Origin = 'vendas_id'
+      Required = True
+      Visible = False
+    end
+    object FDQueryVendasDproduto: TStringField
+      FieldName = 'produto'
+      Origin = 'produto'
+      Required = True
+      Size = 50
+    end
+    object FDQueryVendasDvalor: TBCDField
+      DisplayLabel = 'Valor:'
+      FieldName = 'valor'
+      Origin = 'valor'
+      Required = True
+      DisplayFormat = '#,###0.00'
+      Precision = 10
+      Size = 2
+    end
+    object FDQueryVendasDquantidade: TIntegerField
+      DisplayLabel = 'QTDE:'
+      FieldName = 'quantidade'
+      Origin = 'quantidade'
+      Required = True
+      DisplayFormat = '#,###0.00'
+    end
+    object FDQueryVendasDtotal: TBCDField
+      DisplayLabel = 'TOTAL:'
+      FieldName = 'total'
+      Origin = 'total'
+      Required = True
+      DisplayFormat = '#,###0.00'
+      Precision = 10
+      Size = 2
+    end
+    object FDQueryVendasDproduto_id: TIntegerField
+      FieldName = 'produto_id'
+      Origin = 'produto_id'
+      Required = True
+      Visible = False
+    end
+    object FDQueryVendasDfuncionaro_id: TIntegerField
+      FieldName = 'funcionaro_id'
+      Origin = 'funcionaro_id'
+      Required = True
+      Visible = False
+    end
+  end
+  object DataSourceVendasD: TDataSource
+    DataSet = FDQueryVendasD
+    Left = 952
+    Top = 232
+  end
+  object FDQuerySuporte: TFDQuery
+    Connection = FDConnection
+    Left = 488
+    Top = 72
+  end
+  object FDQueryMovimentos: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      '')
+    Left = 40
+    Top = 320
+  end
+  object DataSourceMovimentos: TDataSource
+    DataSet = FDQueryMovimentos
+    Left = 40
+    Top = 376
+  end
+  object FDQueryGastos: TFDQuery
+    Connection = FDConnection
+    SQL.Strings = (
+      'select * from gastos')
+    Left = 152
+    Top = 320
+    object FDQueryGastosid: TFDAutoIncField
+      DisplayLabel = 'ID'
+      FieldName = 'id'
+      Origin = 'id'
+      ProviderFlags = [pfInWhere, pfInKey]
+      Visible = False
+    end
+    object FDQueryGastosmotivo: TStringField
+      DisplayLabel = 'Motivo'
+      FieldName = 'motivo'
+      Origin = 'motivo'
+      Required = True
+      Size = 50
+    end
+    object FDQueryGastosvalor: TBCDField
+      DisplayLabel = 'Valor'
+      FieldName = 'valor'
+      Origin = 'valor'
+      Required = True
+      currency = True
+      Precision = 10
+      Size = 2
+    end
+    object FDQueryGastosfuncionario_id: TIntegerField
+      FieldName = 'funcionario_id'
+      Origin = 'funcionario_id'
+      Required = True
+      Visible = False
+    end
+    object FDQueryGastosdata: TDateField
+      FieldName = 'data'
+      Origin = 'data'
+      Required = True
+    end
+  end
+  object DataSourceGastos: TDataSource
+    Left = 152
+    Top = 376
+  end
+end

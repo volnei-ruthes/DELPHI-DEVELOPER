@@ -1,0 +1,7 @@
+Xampp-mysql - “Table doesn't exist in engine” #1932
+
+Copy the
+ ib_logfileXX.. 
+ ibdata file 
+ 
+ from old mysql/data folder to the new mysql data folder and it will fix the issue

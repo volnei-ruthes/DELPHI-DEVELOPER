@@ -1,0 +1,14 @@
+Sistema PDV Commerce VRR.
+
+*Criado por Volnei Ramos Ruthes.
+
+1. Do Objetivo:
+
+Sistema desenvolvido para aprimoramento pessoal e exercicio de boas praticas de programação
+
+2. Das ferramentas:
+
+ A) XAMPP Vers. 3.2.4 (servidor local);
+ B) MySQL (Banco de Dados);
+ C) DELPHI (versão Community 10.3);
+ D) RELATORIOS (Fast Report);

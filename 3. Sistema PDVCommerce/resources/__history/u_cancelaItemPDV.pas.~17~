@@ -1,0 +1,143 @@
+unit u_cancelaItemPDV;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
+
+type
+  Tfrm__cancelaItemPDV = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    edt_cancelarItem: TEdit;
+    Label1: TLabel;
+    procedure FormShow(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+  //Aviso Sistema
+  TAviso = class helper for TForm
+    procedure AvisoAlerta(pMsg:PWideChar);
+    procedure Aviso(pMsg:PWideChar);
+  end;
+
+var
+  frm__cancelaItemPDV: Tfrm__cancelaItemPDV;
+
+implementation
+
+{$R *.dfm}
+
+uses u_geralHelper, u_dm;
+
+{ TAviso }
+
+procedure TAviso.Aviso(pMsg: PWideChar);
+begin
+  Application.MessageBox(pMsg,'Informação',MB_OK + MB_ICONINFORMATION)
+end;
+
+procedure TAviso.AvisoAlerta(pMsg:PWideChar);
+begin
+   //MessageDlg(pMsg,mtWarning,mbOKCancel,0);
+   Application.MessageBox(pMsg,'Alerta!',MB_OK + MB_ICONWARNING)
+end;
+
+procedure Tfrm__cancelaItemPDV.FormKeyDown(Sender: TObject; var Key: Word;  Shift: TShiftState);
+var
+  idItem: string;
+
+            procedure atualizaEstoquePosExclusaoPorItem;
+             var
+                EstoqueAtualProdutoBD, QtdeItemVendidoBD, NewEstoque: integer;
+              begin
+                //1. Get Qtde Estoque Total no BD - PRODUTO.
+                with dm.FDQuery_produtos do begin
+                  Close;
+                  SQL.Clear;
+                  SQL.Add('SELECT estoque FROM produtos WHERE id = :pIdProduto');
+                  ParamByName('pIdProduto').Value := VendaItemProdutoPDV.idProduto;
+                  Open();
+                  EstoqueAtualProdutoBD := dm.FDQuery_produtos.FieldByName('estoque').Value;
+                end;
+                //1. Get Qtde Item em vendas_pdv_d.
+                with dm.FDQueryVendasD do begin
+                  Close;
+                  SQL.Clear;
+                  SQL.Add('SELECT quantidade FROM vendas_pdv_d WHERE id = :pIdItem');
+                  ParamByName('pIdItem').Value := idItem;
+                  Open();
+                  QtdeItemVendidoBD := dm.FDQuery_produtos.FieldByName('quantidade').Value;
+                end;
+                NewEstoque := EstoqueAtualProdutoBD + QtdeItemVendidoBD;  //Acrescenta a quantidade do item cancelado ao estoque.
+                //3. Atualiza estoque produtos + (Devolvendo o a quantidade do item cancelado).
+                with dm.FDQuery_produtos do begin
+                  Close;
+                  SQL.Clear;
+                  SQL.Add('UPDATE produtos SET estoque = :pEstoque WHERE id = :pId');
+                  ParamByName('pEstoque').Value    := NewEstoque;
+                  ParamByName('pId').Value := VendaItemProdutoPDV.idProduto;
+                  ExecSQL;
+                end;
+            end;
+
+begin
+  If key = VK_RETURN then Begin //Enter.
+
+     if edt_cancelarItem.isVazio then begin
+        AvisoAlerta('É necessario digitar o código do produto!');
+        edt_cancelarItem.Clear;
+        edt_cancelarItem.SetFocus;
+        exit;
+     end;
+
+     if MessageDlg('Deseja excluir o item da venda?',mtConfirmation,[mbyes,mbno],0)= mryes then begin
+
+        idItem := edt_cancelarItem.Text;
+        with dm.FDQuerySuporte do begin
+          Close;
+          SQL.Clear;
+          SQL.Add('SELECT * FROM vendas_pdv_d WHERE id = :pId');
+          ParamByName('pId').Value := idItem;
+          Open();
+        end;
+
+        if not(dm.FDQuerySuporte.IsEmpty) then  begin
+
+          with dm.FDQuerySuporte do begin
+            Close;
+            SQL.Clear;
+            SQL.Add('DELETE FROM vendas_pdv_d WHERE id = :pId');
+            ParamByName('pId').Value := idItem;
+            ExecSQL;
+            Close;
+          end;
+          Close;
+
+        end else begin
+           AvisoAlerta('ID do item não corresponde ao grid da lista da venda');
+           edt_cancelarItem.SetFocus;
+        end;
+
+     end;
+
+
+  end;
+
+
+
+
+
+end;
+
+procedure Tfrm__cancelaItemPDV.FormShow(Sender: TObject);
+begin
+  edt_cancelarItem.SetFocus;
+end;
+
+end.

@@ -1,0 +1,249 @@
+unit u_usuarios;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Data.DB,
+  Vcl.Grids, Vcl.DBGrids;
+
+type
+  Tfrm_usuarios = class(TForm)
+    Label1: TLabel;
+    edt_buscarNome: TEdit;
+    edt_nome: TEdit;
+    Label2: TLabel;
+    btn_novo: TSpeedButton;
+    btn_editar: TSpeedButton;
+    btn_salvar: TSpeedButton;
+    btn_excluir: TSpeedButton;
+    btn_cancelar: TSpeedButton;
+    btn_buscar: TSpeedButton;
+    Label3: TLabel;
+    edt_usuario: TEdit;
+    Label4: TLabel;
+    edt_senha: TEdit;
+    db_funcionarios: TDBGrid;
+    procedure btn_buscarClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btn_novoClick(Sender: TObject);
+    procedure edt_buscarNomeChange(Sender: TObject);
+    procedure btn_cancelarClick(Sender: TObject);
+    procedure btn_salvarClick(Sender: TObject);
+    procedure db_funcionariosCellClick(Column: TColumn);
+    procedure btn_editarClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure inicializaTela;
+    procedure listarUsuarios;
+    procedure buscarByNome;
+    procedure limparCampos;
+    procedure HabilitarCampos;
+    procedure DesabilitarCampos;
+    procedure configuraBtnCancelar;
+    procedure configurarBtnNovo;
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_usuarios: Tfrm_usuarios;
+
+implementation
+
+{$R *.dfm}
+
+uses u_dm, u_funcionarios, u_geralHelper;
+
+procedure Tfrm_usuarios.btn_buscarClick(Sender: TObject);
+begin
+  Doc:='USU';
+  frm_funcionarios := Tfrm_funcionarios.Create(self);
+  frm_funcionarios.Show;
+end;
+
+procedure Tfrm_usuarios.btn_cancelarClick(Sender: TObject);
+begin
+  listarUsuarios;
+  limparCampos;
+  configuraBtnCancelar;
+  edt_buscarNome.SetFocus;
+end;
+
+procedure Tfrm_usuarios.btn_editarClick(Sender: TObject);
+begin
+   with dm.FDQuery_Usuarios do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('UPDATE usuarios SET usuario=:usuario, senha=:senha');
+    SQL.Add('WHERE id='+idFuncionario);
+    ParamByName('usuario').Value := edt_usuario.Text;
+    ParamByName('senha').Value := edt_senha.Text;
+    ExecSQL;
+  end;
+  Aviso('Registro editado com sucesso!');
+
+  inicializaTela;
+  listarUsuarios;
+end;
+
+procedure Tfrm_usuarios.btn_novoClick(Sender: TObject);
+begin
+  HabilitarCampos;
+  limparCampos;
+  btn_salvar.Visible:=true;
+  configurarBtnNovo;
+end;
+
+procedure Tfrm_usuarios.btn_salvarClick(Sender: TObject);
+var
+  usuario:string;
+begin
+  if edt_nome.isVazio then begin
+    AvisoAlerta('Campo Nome deve ser preenchido!');
+    edt_nome.SetFocus;
+    exit;
+  end;
+
+  if edt_usuario.isVazio then begin
+    AvisoAlerta('Campo usuario deve ser preenchido!');
+    edt_usuario.SetFocus;
+    exit;
+  end;
+
+  if edt_senha.isVazio then begin
+    AvisoAlerta('Campo senha deve ser preenchido!');
+    edt_senha.SetFocus;
+    exit;
+  end;
+
+  //Verifica se o cargo já está cadastrado:
+  with dm.FDQuery_Usuarios do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT nome FROM usuarios WHERE lower(nome) = ' + QuotedStr(LowerCase(trim(edt_nome.Text))));
+    Open();
+
+    if not(dm.FDQuery_Usuarios.IsEmpty) then  begin
+      usuario := dm.FDQuery_Usuarios['nome']; //ou dm.FDQuery_cargos.FieldByName('cargo').AsString;
+      AvisoAlerta(Pchar('Campo '+usuario+' já cadastrado!')); //Usei cast explicito de Pchar para evitar erro de PWidechar X String .
+      exit;
+    end;
+  end;
+
+   with dm.FDQuery_Usuarios do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('INSERT INTO usuarios (nome, usuario, senha, cargo, id_funcionario)');
+    SQL.Add(' VALUES (:nome, :usuario, :senha, :cargo, :id_funcionario)');
+    ParamByName('nome').Value := edt_nome.Text;
+    ParamByName('usuario').Value := edt_usuario.Text;
+    ParamByName('senha').Value := edt_senha.Text;
+    ParamByName('cargo').Value := Funcionario.Cargo;
+    ParamByName('id_funcionario').Value :=Funcionario.Id;
+    ExecSQL;
+  end;
+  Aviso('Registro salvo com sucesso!');
+  inicializaTela;
+  listarUsuarios;
+end;
+
+procedure Tfrm_usuarios.buscarByNome;
+begin
+   with dm.FDQuery_Usuarios do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT * FROM usuarios WHERE lower(nome) LIKE ' + QuotedStr(LowerCase(trim(edt_buscarNome.Text+'%'))));
+    Open();
+  end;
+end;
+
+procedure Tfrm_usuarios.configuraBtnCancelar;
+begin
+  btn_salvar.Visible  :=false;
+  btn_excluir.Visible :=false;
+  btn_editar.Visible  :=false;
+end;
+
+procedure Tfrm_usuarios.configurarBtnNovo;
+begin
+  btn_excluir.Visible :=false;
+  btn_editar.Visible  :=false;
+  btn_buscar.Visible  :=true;
+end;
+
+procedure Tfrm_usuarios.db_funcionariosCellClick(Column: TColumn);
+begin
+  btn_editar.Visible  := true;
+  btn_excluir.Visible := true;
+
+  if not(dm.FDQuery_Usuarios.FieldByName('id').Value = null) then begin
+    edt_nome.Text      := dm.FDQuery_Usuarios.FieldByName('nome').Value;
+    edt_usuario.Text   := dm.FDQuery_Usuarios.FieldByName('usuario').Value;
+    edt_senha.Text     := dm.FDQuery_Usuarios.FieldByName('senha').Value;
+  end;
+  HabilitarCampos;
+end;
+
+procedure Tfrm_usuarios.DesabilitarCampos;
+begin
+  edt_nome.Enabled     := false;
+  edt_usuario.Enabled  := false;
+  edt_senha.Enabled    := false;
+end;
+
+procedure Tfrm_usuarios.edt_buscarNomeChange(Sender: TObject);
+begin
+  buscarByNome;
+end;
+
+procedure Tfrm_usuarios.FormActivate(Sender: TObject);
+begin
+  edt_nome.Text := Funcionario.Nome;
+  HabilitarCampos;
+end;
+
+procedure Tfrm_usuarios.FormShow(Sender: TObject);
+begin
+  limparCampos;
+  DesabilitarCampos;
+  listarUsuarios;
+end;
+
+procedure Tfrm_usuarios.HabilitarCampos;
+begin
+  edt_usuario.Enabled  := true;
+  edt_senha.Enabled    := true;
+end;
+
+procedure Tfrm_usuarios.inicializaTela;
+begin
+  limparCampos;
+  DesabilitarCampos;
+  btn_salvar.Visible  :=false;
+  btn_excluir.Visible :=false;
+  btn_editar.Visible  :=false;
+end;
+
+procedure Tfrm_usuarios.limparCampos;
+Var i : Integer;
+begin
+  for i := 0 to ComponentCount -1 do begin
+    if Components[i] is TEdit then begin
+      TEdit(Components[i]).Text := '';
+    end;
+  end;
+end;
+
+procedure Tfrm_usuarios.listarUsuarios;
+begin
+  with dm.FDQuery_Usuarios do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT * FROM usuarios');
+    Open();
+  end;
+end;
+
+end.

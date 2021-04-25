@@ -1,0 +1,50 @@
+unit u_geral;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+type  { HELPERS }
+
+  //Verifica se o EDIT é vazio.
+  TEditHelper = class helper for TEdit
+    function isVazio:boolean;
+  end;
+
+  TAviso = class helper for TForm
+    procedure AvisoAlerta(pMsg:PWideChar);
+  end;
+
+  //Formata valores currency.
+  TDoubleHelper = record helper for double
+    function valorMonetario(pTipoFormat:string) : string;
+  end;
+
+implementation
+
+
+{ TEditHelper }
+
+function TEditHelper.isVazio: boolean;
+begin
+  result := trim(self.Text) = EmptyStr;
+end;
+
+{ TDoubleHelper }
+
+function TDoubleHelper.valorMonetario(pTipoFormat: string): string;
+begin
+  result := FormatFloat(pTipoFormat, Self);  //ex. TipFormat 'R$ ###,##0.00'
+end;
+
+{ TAviso }
+
+procedure TAviso.AvisoAlerta(pMsg:PWideChar);
+begin
+   //MessageDlg(pMsg,mtWarning,mbOKCancel,0);
+   Application.MessageBox(pMsg,'Alerta!',MB_OK + MB_ICONWARNING)
+end;
+
+end.

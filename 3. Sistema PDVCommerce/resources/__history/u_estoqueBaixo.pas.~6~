@@ -1,0 +1,51 @@
+unit u_estoqueBaixo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids;
+
+type
+  TfrmEstoqueBaixo = class(TForm)
+    db_EstoqueBaixo: TDBGrid;
+    procedure FormActivate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+    procedure ListaEstoqueBaixo;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmEstoqueBaixo: TfrmEstoqueBaixo;
+
+implementation
+
+{$R *.dfm}
+
+uses u_geralHelper, u_dm, u_entradasProdutosEAQ;
+
+procedure TfrmEstoqueBaixo.FormActivate(Sender: TObject);
+begin
+   ListaEstoqueBaixo;
+end;
+
+procedure TfrmEstoqueBaixo.FormShow(Sender: TObject);
+begin
+   ListaEstoqueBaixo;
+end;
+
+procedure TfrmEstoqueBaixo.ListaEstoqueBaixo;
+begin
+  with dm.FDQuery_produtos do begin
+    Close;
+    SQL.clear;
+    SQL.Add('SELECT * FROM produtos WHERE estoque <= 10');
+    //ParamByName('pQtdeEstoque').Value    := NewEstoque;
+    Open();
+  end;
+end;
+
+end.

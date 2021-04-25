@@ -1,0 +1,27 @@
+unit u_estoqueBaixo;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids;
+
+type
+  TfrmEstoqueBaixo = class(TForm)
+    db_EstoqueBaixo: TDBGrid;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmEstoqueBaixo: TfrmEstoqueBaixo;
+
+implementation
+
+{$R *.dfm}
+
+uses u_geralHelper, u_dm, u_entradasProdutosEAQ;
+
+end.
