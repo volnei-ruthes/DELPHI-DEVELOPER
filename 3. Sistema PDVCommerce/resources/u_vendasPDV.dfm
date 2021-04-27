@@ -44,7 +44,6 @@ object frm_vendasPDV: Tfrm_vendasPDV
         item
           Expanded = False
           FieldName = 'id'
-          Title.Caption = 'ID do Item'
           Visible = True
         end
         item
@@ -55,13 +54,11 @@ object frm_vendasPDV: Tfrm_vendasPDV
         item
           Expanded = False
           FieldName = 'produto'
-          Title.Caption = 'PRODUTO:'
           Visible = True
         end
         item
           Expanded = False
           FieldName = 'valor'
-          Title.Caption = 'VALOR:'
           Visible = True
         end
         item

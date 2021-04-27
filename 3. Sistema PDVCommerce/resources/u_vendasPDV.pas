@@ -166,7 +166,7 @@ end;
 
 procedure Tfrm_vendasPDV.edt_descontoExit(Sender: TObject);
 begin
-  VendaPDV.totalDesconto  :=  strTofloat(edt_desconto.Text);
+  VendaPDV.totalDesconto  := strTofloat(edt_desconto.Text);
   vendaPDV.totalCompras   := vendaPDV.subtotal - VendaPDV.totalDesconto;     //deve ser retirado do 'total da compra' o 'total do desconto' que foi dado ao cliente.
   edt_totalCompra.Text    := formatFloat('R$ #,,,,0.00',vendaPDV.totalCompras);
   edt_desconto.Text       := formatFloat('R$ #,,,,0.00',VendaPDV.totalDesconto);
@@ -199,6 +199,7 @@ begin
   //Valor recebido - troco a devolver.
   VendaPDV.totalRecebido := strTofloat(edt_valorRecebido.Text);
   VendaPDV.trocoDevolver := VendaPDV.totalRecebido - VendaPDV.totalCompras;
+  VendaPDV.status        := 'Concluida';
   edt_valorRecebido.Text := formatFloat('R$ #,,,,0.00',VendaPDV.totalRecebido);
   edt_troco.Text         := formatFloat('R$ #,,,,0.00',VendaPDV.trocoDevolver);
 
@@ -211,11 +212,16 @@ begin
        with dm.FDQueryVendasC do begin
         Close;
         SQL.Clear;
-        SQL.Add('INSERT INTO vendas_pdv_c (data, funcionario, valor)');
-        SQL.Add(' VALUES (:pData, :pFuncionario, :pValor)');
-        ParamByName('pData').AsDateTime    := Now;
-        ParamByName('pFuncionario').Value  := FuncionarioCaixaPDV.id;
-        ParamByName('pValor').AsCurrency   := VendaPDV.totalCompras;
+        SQL.Add('INSERT INTO vendas_pdv_c (data, horario, funcionario, valor, desconto, valor_recebido, troco, status)');
+        SQL.Add(' VALUES (:pData, :pHorario, :pFuncionario, :pValor, :pDesconto, :pValor_recebido, :pTroco, :pStatus)');
+        ParamByName('pData').AsDate               := StrToDate(FormatDateTime('dd/mm/yyyy',Now));
+        ParamByName('pHorario').Value             := TimeToStr(Time);
+        ParamByName('pFuncionario').Value         := FuncionarioCaixaPDV.id;
+        ParamByName('pValor').AsCurrency          := VendaPDV.totalCompras;
+        ParamByName('pDesconto').AsCurrency       := VendaPDV.totalDesconto;
+        ParamByName('pValor_recebido').AsCurrency := VendaPDV.totalRecebido;
+        ParamByName('pTroco').AsCurrency          := VendaPDV.trocoDevolver;
+        ParamByName('pStatus').Value              := VendaPDV.status;
         ExecSQL;
       end;
 

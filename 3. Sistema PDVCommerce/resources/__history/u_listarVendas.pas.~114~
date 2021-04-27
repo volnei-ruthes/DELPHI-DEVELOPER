@@ -1,0 +1,247 @@
+unit u_listarVendas;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.Buttons, Data.DB,
+  Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids;
+
+type
+  Tfrm_ListarVendas = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    dataInicial: TDateTimePicker;
+    gridListarVendas: TDBGrid;
+    dataFinal: TDateTimePicker;
+    cbConcluidaCancelada: TComboBox;
+    btn_NotaFiscal: TSpeedButton;
+    btn_Comprovante: TSpeedButton;
+    btn_CancelarItem: TSpeedButton;
+    procedure dataInicialChange(Sender: TObject);
+    procedure dataFinalChange(Sender: TObject);
+    procedure cbConcluidaCanceladaChange(Sender: TObject);
+    procedure btn_CancelarItemClick(Sender: TObject);
+    procedure gridListarVendasCellClick(Column: TColumn);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+     procedure buscarData;
+  public
+    { Public declarations }
+  end;
+
+  //Aviso Sistema
+  TAviso = class helper for TForm
+    procedure AvisoAlerta(pMsg:PWideChar);
+    procedure AvisoErro(pMsg:PWideChar);
+    procedure Aviso(pMsg:PWideChar);
+  end;
+
+var
+  frm_listarVendas: Tfrm_listarVendas;
+  idVendaC:string;
+
+implementation
+
+{$R *.dfm}
+
+uses u_dm, u_geralHelper;
+
+{ Tfrm_listarVendas }
+
+{ TAviso }
+
+procedure TAviso.Aviso(pMsg: PWideChar);
+begin
+  Application.MessageBox(pMsg,'Informação',MB_OK + MB_ICONINFORMATION)
+end;
+
+procedure TAviso.AvisoAlerta(pMsg:PWideChar);
+begin
+   Application.MessageBox(pMsg,'Alerta!',MB_OK + MB_ICONWARNING)
+end;
+
+procedure TAviso.AvisoErro(pMsg:PWideChar);
+begin
+   Application.MessageBox(pMsg,'Erro!',MB_OK + MB_ICONERROR);
+end;
+
+
+
+{ Tfrm_ListarVendas }
+
+procedure Tfrm_ListarVendas.btn_CancelarItemClick(Sender: TObject);
+var
+ idProduto, qtdeItem:string;
+              procedure atualizaEstoquePosCancelamentoVendaC;
+              var
+                EstoqueAtual, NewEstoque: integer;
+              begin
+                //1. Get Qtde Estoque BD
+                with dm.FDQuery_produtos do begin
+                  Close;
+                  SQL.Clear;
+                  SQL.Add('SELECT estoque FROM produtos WHERE id = :pIdProduto');
+                  ParamByName('pIdProduto').Value := idProduto;
+                  Open();
+                  EstoqueAtual := dm.FDQuery_produtos.FieldByName('estoque').Value;
+                end;
+                NewEstoque := EstoqueAtual + strtoint(qtdeItem);  //Após cancelar a venda do cliente, a qtde do item deve ser DEVOLVIDO ao Estoque.
+                //2. Atualiza estoque produtos
+                with dm.FDQuery_produtos do begin
+                  Close;
+                  SQL.Clear;
+                  SQL.Add('UPDATE produtos SET estoque = :pEstoque WHERE id = :pId');
+                  ParamByName('pEstoque').Value    := NewEstoque;
+                  ParamByName('pId').Value := idProduto;
+                  ExecSQL;
+                end;
+              end;
+begin
+  if MessageDlg('Deseja cancelar o item selecionado de venda?',mtConfirmation,[mbyes,mbno],0)= mryes then begin
+    try
+      try
+          //1. UPDATE Tab. VENDAC no status = cancelada.
+          with dm.FDQueryVendasC do begin
+            Close;
+            SQL.Clear;
+            SQL.Add('UPDATE vendas_pdv_c SET status = :pStatus WHERE id = :pIdVenda');
+            ParamByName('pStatus').Value := 'Cancelada';
+            ParamByName('pIdVenda').Value := idVendaC;
+            ExecSQL;
+          end;
+
+          //2. DELETE a VENDAC de Tab. movimentações.
+          with dm.FDQueryMovimentos do begin
+            Close;
+            SQL.Clear;
+            SQL.Add('DELETE FROM movimentacoes');
+            SQL.Add('WHERE movimento_id = '+idVendaC);
+            ExecSQL;
+          end;
+
+           //3. COMEÇA A DEVOLVER AS QTDES DOS ITEMS AO ESTOQUE.
+           //3.1 Get todos os items de uma VENDAC.
+           with dm.FDQueryVendasD do begin
+            Close;
+            SQL.Clear;
+            SQL.Add('SELECT * FROM vendas_pdv_d WHERE vendas_id = :pVendasId');
+            ParamByName('pVendasId').Value := idVendaC;
+            Open();
+          end;
+          if not(dm.FDQueryVendasD.IsEmpty) then begin
+            while not(dm.FDQueryVendasD.Eof) do begin
+              idproduto := dm.FDQueryVendasD['produto_id'];
+              qtdeItem  := dm.FDQueryVendasD['quantidade'];
+              //3.1.1 VARRE cada item da VENDAC e get idproduto e qtde do item vendido e com esses dados, devolve a quantidade ao estoque após cancelada a venda do cliente.
+              atualizaEstoquePosCancelamentoVendaC;
+              dm.FDQueryVendasD.Next;
+              showmessage(idproduto);
+              showmessage(qtdeItem);
+            end;
+          end;
+
+          Aviso('Item cancelado!');
+          btn_CancelarItem.Visible:= true;
+          btn_comprovante.Visible := true;
+          btn_notaFiscal.Visible  := true;
+          buscarData;
+
+      except on E: Exception do
+        AvisoErro(pchar(e.Message));
+      end;
+    finally
+       dm.FDQueryVendasC.Close;
+       dm.FDQueryVendasD.Close;
+       dm.FDQueryMovimentos.Close;
+    end;
+  end;
+end;
+
+procedure Tfrm_ListarVendas.buscarData;
+begin
+  with dm.FDQueryVendasC do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT vendas_pdv_c.id as id, valor, data, horario, status, nome as funcionario FROM vendas_pdv_c');
+    SQL.Add('INNER JOIN funcionarios ON funcionarios.id = vendas_pdv_c.funcionario');
+    SQL.Add('WHERE data >= :pDataInicial AND data <= :pDataFinal AND status = :pStatus ORDER BY id DESC ');
+    ParamByName('pDataInicial').Value := FormatDateTime('yyyy/mm/dd', dataInicial.Date);
+    ParamByName('pDataFinal').Value   := FormatDateTime('yyyy/mm/dd', dataFinal.Date);
+    ParamByName('pStatus').Value      := cbConcluidaCancelada.Text;
+    Open();
+  end;
+
+  //FORMATO GRID.
+
+  //1. coluna: ID
+  gridListarVendas.Columns.Items[0].FieldName     := 'id';
+  gridListarVendas.Columns.Items[0].Title.Caption := 'Id';
+  gridListarVendas.Columns.Items[0].Visible       := true;
+  gridListarVendas.Columns[0].Alignment           := taCenter;
+  //2. coluna: Valor
+  gridListarVendas.Columns.Items[1].FieldName     := 'valor';
+  gridListarVendas.Columns.Items[1].Title.Caption := 'Valor';
+  gridListarVendas.Columns.Items[1].Width         := 60;
+  TFloatField( dm.FDQueryVendasC.FieldByName('valor') ).DisplayFormat := 'R$ #,,,,0.00';  //Formato valor do grid em formato de reais
+  //3. coluna: Data
+  gridListarVendas.Columns.Items[2].FieldName     := 'data';
+  gridListarVendas.Columns.Items[2].Title.Caption := 'Data';
+  gridListarVendas.Columns.Items[2].Width         := 80;
+  gridListarVendas.Columns[2].Alignment           := taCenter;
+  //4. coluna: Horario
+  gridListarVendas.Columns.Items[3].FieldName     := 'horario';
+  gridListarVendas.Columns.Items[3].Title.Caption := 'Hora';
+  gridListarVendas.Columns.Items[3].Width         := 80;
+  //5. coluna: Status
+  gridListarVendas.Columns.Items[4].FieldName     := 'status';
+  gridListarVendas.Columns.Items[4].Title.Caption := 'Status';
+  gridListarVendas.Columns.Items[4].Width         := 80;
+  //6. coluna: Funcionario
+  gridListarVendas.Columns.Items[5].FieldName     := 'funcionario';
+  gridListarVendas.Columns.Items[5].Title.Caption := 'Funcionário';
+  gridListarVendas.Columns.Items[5].Width         := 200;
+
+  //CASO não tiver resultado desabilita botoes.
+  btn_CancelarItem.Visible := not(dm.FDQueryVendasC.FieldByName('id').Value = null);
+  btn_comprovante.Visible  := not(dm.FDQueryVendasC.FieldByName('id').Value = null);
+  btn_notaFiscal.Visible   := not(dm.FDQueryVendasC.FieldByName('id').Value = null);
+
+end;
+
+procedure Tfrm_ListarVendas.cbConcluidaCanceladaChange(Sender: TObject);
+begin
+ buscarData;
+end;
+
+procedure Tfrm_ListarVendas.dataFinalChange(Sender: TObject);
+begin
+ buscarData;
+end;
+
+procedure Tfrm_ListarVendas.dataInicialChange(Sender: TObject);
+begin
+  buscarData;
+end;
+
+procedure Tfrm_ListarVendas.FormShow(Sender: TObject);
+begin
+ dataInicial.Date := Date;
+ dataFinal.Date   := Date;
+ buscarData;
+end;
+
+procedure Tfrm_ListarVendas.gridListarVendasCellClick(Column: TColumn);
+begin
+  if not(dm.FDQueryVendasC.FieldByName('id').Value = null) then begin
+    idVendaC := dm.FDQueryVendasC.FieldByName('id').Value;
+     btn_CancelarItem.Visible:= true;
+     btn_comprovante.Visible := true;
+     btn_notaFiscal.Visible  := true;
+  end;
+end;
+
+end.
+

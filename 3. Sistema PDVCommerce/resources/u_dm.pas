@@ -102,6 +102,7 @@ type
     totalCompras  : double;
     totalRecebido : double;
     trocoDevolver : double;
+    status        : string;
   end;
 
   TVendaItemProdutoPDV = record

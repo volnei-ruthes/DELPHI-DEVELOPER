@@ -1,0 +1,162 @@
+unit u_menu;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ExtCtrls;
+
+type
+  Tfrm_menu = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    MainMenu1: TMainMenu;
+    Cadastros1: TMenuItem;
+    Estoque1: TMenuItem;
+    Movimentos1: TMenuItem;
+    Relatrios1: TMenuItem;
+    Sair1: TMenuItem;
+    Produtos1: TMenuItem;
+    Fornecedores1: TMenuItem;
+    menu_usuarios: TMenuItem;
+    menu_funcionarios: TMenuItem;
+    menu_cargos: TMenuItem;
+    EntradadeProdutosEAQ1: TMenuItem;
+    SaidadeProdutosESP1: TMenuItem;
+    EstoqueNivelBaixoENB1: TMenuItem;
+    Vendas1: TMenuItem;
+    Movimentaes1: TMenuItem;
+    Gastos1: TMenuItem;
+    Pagamentos1: TMenuItem;
+    ConsultarVendas1: TMenuItem;
+    procedure menu_usuariosClick(Sender: TObject);
+    procedure menu_funcionariosClick(Sender: TObject);
+    procedure menu_cargosClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure Fornecedores1Click(Sender: TObject);
+    procedure Produtos1Click(Sender: TObject);
+    procedure EntradadeProdutosEAQ1Click(Sender: TObject);
+    procedure SaidadeProdutosESP1Click(Sender: TObject);
+    procedure EstoqueNivelBaixoENB1Click(Sender: TObject);
+    procedure Vendas1Click(Sender: TObject);
+    procedure Movimentaes1Click(Sender: TObject);
+    procedure Gastos1Click(Sender: TObject);
+    procedure ConsultarVendas1Click(Sender: TObject);
+  private
+    { Private declarations }
+    function getNivelUser(pNivelUser:String): boolean;
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_menu: Tfrm_menu;
+
+implementation
+
+{$R *.dfm}
+
+uses u_usuarios, u_funcionarios, u_cargos, u_dm, u_fornecedores, u_produtos,
+  u_entradasProdutosEAQ, u_saidaProdutosESP, u_estoqueBaixo, u_vendasPDV,
+  u_loginPDV, u_movimentacoes, u_gastos;
+
+procedure Tfrm_menu.menu_cargosClick(Sender: TObject);
+begin
+  frm_cargos := Tfrm_cargos.Create(self);
+  frm_cargos.ShowModal;
+end;
+
+procedure Tfrm_menu.ConsultarVendas1Click(Sender: TObject);
+begin
+  //frm_listarVendas := frm_listarVendas.Create(self);
+  //frm_listarVendas.ShowModal;
+end;
+
+procedure Tfrm_menu.EntradadeProdutosEAQ1Click(Sender: TObject);
+begin
+  frmEntradaProdutosEAQ := TfrmEntradaProdutosEAQ.Create(self);
+  frmEntradaProdutosEAQ.ShowModal;
+end;
+
+procedure Tfrm_menu.EstoqueNivelBaixoENB1Click(Sender: TObject);
+begin
+  frmEstoqueBaixo := TfrmEstoqueBaixo.Create(self);
+  frmEstoqueBaixo.ShowModal;
+  doc:='ENB';
+end;
+
+procedure Tfrm_menu.FormShow(Sender: TObject);
+begin
+  //Restringe o acesso aos Menus se não for suporte ou gerente.
+  if not(getNivelUser(user.nivelUser)) then begin
+    menu_usuarios.Visible     :=false;
+    menu_funcionarios.Visible :=false;
+    menu_cargos.Visible       :=false;
+  end;
+end;
+
+procedure Tfrm_menu.menu_funcionariosClick(Sender: TObject);
+begin
+  frm_funcionarios := Tfrm_funcionarios.Create(self);
+  frm_funcionarios.ShowModal;
+  doc:='FUNC';
+end;
+
+procedure Tfrm_menu.Fornecedores1Click(Sender: TObject);
+begin
+  FrmFornecedores := TFrmFornecedores.Create(self);
+  FrmFornecedores.ShowModal;
+end;
+
+procedure Tfrm_menu.Gastos1Click(Sender: TObject);
+begin
+  frm_gastos := Tfrm_gastos.Create(self);
+  frm_gastos.ShowModal;
+end;
+
+function Tfrm_menu.getNivelUser(pNivelUser: String): boolean;
+const
+   nivelAdms: array[0..1] of string = ('gerente','suporte');
+var
+  i:integer;
+begin
+  result:= true;  //deixar false e retirar os comentarios depois.
+ { for I := Low(nivelAdms) to High(nivelAdms) do begin
+    if lowercase(pNivelUser) = nivelAdms[I] then begin
+      Result := True;
+      Break;
+    end;
+  end;    }
+end;
+
+procedure Tfrm_menu.menu_usuariosClick(Sender: TObject);
+begin
+  frm_usuarios := Tfrm_usuarios.Create(self);
+  frm_usuarios.ShowModal;
+end;
+
+procedure Tfrm_menu.Movimentaes1Click(Sender: TObject);
+begin
+  frm_movimentacoes := Tfrm_movimentacoes.Create(self);
+  frm_movimentacoes.ShowModal;
+end;
+
+procedure Tfrm_menu.Produtos1Click(Sender: TObject);
+begin
+  frm_produtos := Tfrm_produtos.Create(self);
+  frm_produtos.ShowModal;
+end;
+
+procedure Tfrm_menu.SaidadeProdutosESP1Click(Sender: TObject);
+begin
+  frmSaidaProdutoESP := TfrmSaidaProdutoESP.Create(self);
+  frmSaidaProdutoESP.ShowModal;
+end;
+
+procedure Tfrm_menu.Vendas1Click(Sender: TObject);
+begin
+  frm_loginPDV := Tfrm_loginPDV.Create(self);
+  frm_loginPDV.ShowModal;
+end;
+
+end.

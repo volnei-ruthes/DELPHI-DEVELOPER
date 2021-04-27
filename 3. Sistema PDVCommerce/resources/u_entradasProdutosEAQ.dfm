@@ -658,14 +658,12 @@ object frmEntradaProdutosEAQ: TfrmEntradaProdutosEAQ
         Expanded = False
         FieldName = 'valor'
         Title.Caption = 'Valor'
-        Width = 64
         Visible = True
       end
       item
         Expanded = False
         FieldName = 'total'
         Title.Caption = 'Total'
-        Width = 64
         Visible = True
       end
       item

@@ -164,6 +164,10 @@
             <Form>frm_gastos</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="resources\u_listarVendas.pas">
+            <Form>frm_ListarVendas</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
-  Vcl.DBGrids, Vcl.Buttons;
+  Vcl.DBGrids, Vcl.Buttons, Vcl.ComCtrls;
 
 type
   Tfrm_gastos = class(TForm)
@@ -18,6 +18,8 @@ type
     edt_motivo: TEdit;
     Label1: TLabel;
     edt_valor: TEdit;
+    DataBuscar: TDateTimePicker;
+    Label3: TLabel;
     procedure btn_cancelarClick(Sender: TObject);
     procedure btn_novoClick(Sender: TObject);
     procedure btn_salvarClick(Sender: TObject);
@@ -25,11 +27,12 @@ type
     procedure dbGastosCellClick(Column: TColumn);
     procedure btn_excluirClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure DataBuscarChange(Sender: TObject);
   private
     { Private declarations }
     procedure listarGastos;
     procedure configuraBtnCancelar;
-
+    procedure buscarPorData;
   public
     { Public declarations }
   end;
@@ -191,12 +194,31 @@ begin
   edt_valor.Enabled   := false;
 end;
 
+procedure Tfrm_gastos.buscarPorData;
+begin
+   with dm.FDQueryGastos do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT gastos.id as id, motivo, valor, data, nome as funcionario FROM gastos ');
+    SQL.Add('INNER JOIN funcionarios ON funcionarios.id = gastos.funcionario_id');
+    SQL.Add('WHERE data = :pData ORDER BY data ASC');
+    ParamByName('pData').Value := FormatDateTime('yyyy/mm/dd',DataBuscar.Date);
+    Open();
+  end;
+  TFloatField( dm.FDQueryGastos.FieldByName('valor') ).DisplayFormat := 'R$ #,,,,0.00';
+end;
+
 procedure Tfrm_gastos.configuraBtnCancelar;
 begin
   btn_salvar.Visible  := false;
   btn_excluir.Visible := false;
   edt_motivo.Enabled  := false;
   edt_valor.Enabled   := false;
+end;
+
+procedure Tfrm_gastos.DataBuscarChange(Sender: TObject);
+begin
+  buscarPorData;
 end;
 
 procedure Tfrm_gastos.dbGastosCellClick(Column: TColumn);
@@ -217,6 +239,7 @@ end;
 
 procedure Tfrm_gastos.FormShow(Sender: TObject);
 begin
+  DataBuscar.Date := Date;
   listarGastos;
 end;
 

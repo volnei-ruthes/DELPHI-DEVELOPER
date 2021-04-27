@@ -11,7 +11,6 @@ type
   TEnumTipoTotalizador = (tpEntrada, tpSaida);
 
   Tfrm_movimentacoes = class(TForm)
-    Label6: TLabel;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;

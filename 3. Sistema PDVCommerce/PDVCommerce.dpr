@@ -20,7 +20,8 @@ uses
   u_cancelaItemPDV in 'resources\u_cancelaItemPDV.pas' {frm__cancelaItemPDV},
   u_loginPDV in 'resources\u_loginPDV.pas' {frm_loginPDV},
   u_movimentacoes in 'resources\u_movimentacoes.pas' {frm_movimentacoes},
-  u_gastos in 'resources\u_gastos.pas' {frm_gastos};
+  u_gastos in 'resources\u_gastos.pas' {frm_gastos},
+  u_listarVendas in 'resources\u_listarVendas.pas' {frm_ListarVendas};
 
 {$R *.res}
 
@@ -30,9 +31,5 @@ begin
   Application.CreateForm(TDM, DM);
   Application.CreateForm(Tfrm_login, frm_login);
   Application.CreateForm(Tfrm_menu, frm_menu);
-  Application.CreateForm(Tfrm__cancelaItemPDV, frm__cancelaItemPDV);
-  Application.CreateForm(Tfrm_loginPDV, frm_loginPDV);
-  Application.CreateForm(Tfrm_movimentacoes, frm_movimentacoes);
-  Application.CreateForm(Tfrm_gastos, frm_gastos);
   Application.Run;
 end.

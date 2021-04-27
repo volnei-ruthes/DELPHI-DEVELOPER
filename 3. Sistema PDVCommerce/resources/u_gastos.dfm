@@ -4,8 +4,8 @@ object frm_gastos: Tfrm_gastos
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Gastos'
-  ClientHeight = 309
-  ClientWidth = 496
+  ClientHeight = 339
+  ClientWidth = 497
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object frm_gastos: Tfrm_gastos
   TextHeight = 13
   object btn_novo: TSpeedButton
     Left = 60
-    Top = 262
+    Top = 286
     Width = 75
     Height = 46
     Cursor = crHandPoint
@@ -111,7 +111,7 @@ object frm_gastos: Tfrm_gastos
   end
   object btn_salvar: TSpeedButton
     Left = 222
-    Top = 259
+    Top = 283
     Width = 75
     Height = 46
     Cursor = crHandPoint
@@ -203,7 +203,7 @@ object frm_gastos: Tfrm_gastos
   end
   object btn_excluir: TSpeedButton
     Left = 309
-    Top = 262
+    Top = 286
     Width = 75
     Height = 46
     Cursor = crHandPoint
@@ -295,14 +295,14 @@ object frm_gastos: Tfrm_gastos
   end
   object Label2: TLabel
     Left = 8
-    Top = 8
+    Top = 32
     Width = 36
     Height = 13
     Caption = 'Motivo:'
   end
   object btn_cancelar: TSpeedButton
     Left = 141
-    Top = 262
+    Top = 286
     Width = 75
     Height = 46
     Cursor = crHandPoint
@@ -393,14 +393,21 @@ object frm_gastos: Tfrm_gastos
   end
   object Label1: TLabel
     Left = 223
-    Top = 8
+    Top = 32
     Width = 28
     Height = 13
     Caption = 'Valor:'
   end
+  object Label3: TLabel
+    Left = 354
+    Top = 9
+    Width = 32
+    Height = 13
+    Caption = 'Buscar'
+  end
   object dbGastos: TDBGrid
     Left = 8
-    Top = 54
+    Top = 78
     Width = 480
     Height = 202
     DataSource = DM.DataSourceGastos
@@ -453,7 +460,7 @@ object frm_gastos: Tfrm_gastos
   end
   object edt_motivo: TEdit
     Left = 8
-    Top = 27
+    Top = 51
     Width = 209
     Height = 21
     Enabled = False
@@ -461,10 +468,20 @@ object frm_gastos: Tfrm_gastos
   end
   object edt_valor: TEdit
     Left = 223
-    Top = 27
+    Top = 51
     Width = 98
     Height = 21
     Enabled = False
     TabOrder = 1
+  end
+  object DataBuscar: TDateTimePicker
+    Left = 392
+    Top = 8
+    Width = 97
+    Height = 21
+    Date = 44290.000000000000000000
+    Time = 0.416367881945916500
+    TabOrder = 3
+    OnChange = DataBuscarChange
   end
 end
