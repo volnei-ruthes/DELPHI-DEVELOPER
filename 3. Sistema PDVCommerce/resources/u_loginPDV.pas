@@ -38,7 +38,7 @@ implementation
 
 {$R *.dfm}
 
-uses u_geralHelper, u_dm, u_vendasPDV;
+uses u_geralHelper, u_dm, u_vendasPDV, u_caixa;
 
 { TAviso }
 
@@ -110,8 +110,10 @@ begin
   end;   }
   User.funcionarioId := '1'; //teste tela pdv vendas.
   FuncionarioCaixaPDV.Id := User.funcionarioId;
-  frm_vendasPDV := Tfrm_vendasPDV.Create(self);
-  frm_vendasPDV.ShowModal;
+  //frm_vendasPDV := Tfrm_vendasPDV.Create(self);
+  //frm_vendasPDV.ShowModal;
+  frm_caixa := Tfrm_caixa.Create(self);
+  frm_caixa.ShowModal;
   frm_loginPDV.Close;
 end;
 

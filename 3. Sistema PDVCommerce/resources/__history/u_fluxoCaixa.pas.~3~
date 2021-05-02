@@ -1,0 +1,31 @@
+unit u_fluxoCaixa;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Buttons, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.ComCtrls;
+
+type
+  Tfrm_fluxoCaixa = class(TForm)
+    DateTimePickerAbertura: TDateTimePicker;
+    Label1: TLabel;
+    GridCaixa: TDBGrid;
+    btn_Relatorio: TSpeedButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_fluxoCaixa: Tfrm_fluxoCaixa;
+
+implementation
+
+{$R *.dfm}
+
+uses u_geralHelper, u_dm;
+
+end.

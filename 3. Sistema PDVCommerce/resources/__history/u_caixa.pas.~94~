@@ -1,0 +1,417 @@
+unit u_caixa;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.ComCtrls, Vcl.Grids,
+  Vcl.DBGrids, Vcl.Mask, Vcl.StdCtrls, Vcl.Buttons;
+
+type
+  Tfrm_caixa = class(TForm)
+    Label2: TLabel;
+    Valor: TLabel;
+    btn_novo: TSpeedButton;
+    btn_fechar: TSpeedButton;
+    btn_abrir: TSpeedButton;
+    Label6: TLabel;
+    edt_usuario: TEdit;
+    edt_caixa: TEdit;
+    GridCaixa: TDBGrid;
+    edt_senha: TEdit;
+    DateTimePickerAbertura: TDateTimePicker;
+    Label1: TLabel;
+    edt_valor: TEdit;
+    Label3: TLabel;
+    btn_Relatorio: TSpeedButton;
+    procedure FormShow(Sender: TObject);
+    procedure btn_novoClick(Sender: TObject);
+    procedure btn_abrirClick(Sender: TObject);
+    procedure edt_caixaExit(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure DateTimePickerAberturaChange(Sender: TObject);
+    procedure btn_fecharClick(Sender: TObject);
+  private
+    { Private declarations }
+
+    procedure buscarByData;
+    procedure limparCampos;
+    procedure DesabilitarCampos;
+    procedure HabilitarCampos;
+    procedure AbrirCaixa;
+    procedure FecharCaixa;
+    function  isCaixaAberto : boolean;
+    function  getAutorizacaoGerencial(pUser: string; pPassword: string) : boolean;
+
+
+  public
+    { Public declarations }
+  end;
+
+  //Aviso Sistema
+  TAviso = class helper for TForm
+    procedure AvisoAlerta(pMsg:PWideChar);
+    procedure AvisoErro(pMsg:PWideChar);
+    procedure Aviso(pMsg:PWideChar);
+  end;
+
+var
+  frm_caixa: Tfrm_caixa;
+
+implementation
+
+{$R *.dfm}
+
+uses u_geralHelper, u_dm, u_vendasPDV;
+
+{ TAviso }
+
+procedure TAviso.Aviso(pMsg: PWideChar);
+begin
+  Application.MessageBox(pMsg,'Informação',MB_OK + MB_ICONINFORMATION)
+end;
+
+procedure TAviso.AvisoAlerta(pMsg:PWideChar);
+begin
+   Application.MessageBox(pMsg,'Alerta!',MB_OK + MB_ICONWARNING)
+end;
+
+procedure TAviso.AvisoErro(pMsg:PWideChar);
+begin
+   Application.MessageBox(pMsg,'Erro!',MB_OK + MB_ICONERROR);
+end;
+
+function Tfrm_caixa.getAutorizacaoGerencial(pUser, pPassword: string): boolean;
+begin
+   result := false;
+   with dm.FDQuery_Usuarios do begin
+      Close;
+      SQL.Clear;
+      SQL.Add('SELECT * FROM usuarios WHERE usuario = :pUsuario');
+      ParamByName('pUsuario').Value := pUser;
+      Open();
+
+      if not(dm.FDQuery_Usuarios['usuario'] = pUser) then  begin
+        AvisoAlerta(Pchar('Usuário não confere com o cadastro!'));
+        exit;
+      end;
+
+      if not(dm.FDQuery_Usuarios['senha'] = pPassword) then  begin
+        AvisoAlerta(Pchar('Senha não confere com cadastro!'));
+        exit;
+      end;
+
+      registroCaixaPDV.userGerencialId   := dm.FDQuery_Usuarios['id'];
+      registroCaixaPDV.userGerencial     := dm.FDQuery_Usuarios['usuario'];
+      registroCaixaPDV.nivelGerencial    := dm.FDQuery_Usuarios['cargo'];
+
+      result := true;
+   end;
+end;
+
+procedure Tfrm_caixa.AbrirCaixa;
+begin
+  //1. Validações Gerais.
+  //1.1 Verificar validação gerencial.
+  if edt_usuario.isVazio then begin
+     AvisoAlerta(pChar('Campo usuário gerencial deve ser preenchido'));
+     exit;
+  end;
+  if edt_senha.isVazio then begin
+     AvisoAlerta(pChar('Campo senha gerencial deve ser preenchido'));
+     exit;
+  end;
+  //1.2 Verificar validação de valor inicio/fechamento.
+  if edt_valor.isVazio then begin
+     AvisoAlerta(pChar('Campo valor deve ser preenchido'));
+     exit;
+  end;
+  //1.3 Verificar validação de identificação de caixa.
+  if edt_caixa.isVazio then begin
+     AvisoAlerta(pChar('Campo número do caixa deve ser preenchido'));
+     exit;
+  end;
+  //1.4 Confirma validação gerencial no BD.
+  if not(getAutorizacaoGerencial(edt_usuario.Text, edt_senha.Text)) then begin
+    AvisoErro(pChar('Erro de Autorização Gerencial, verifique usuario ou senha se estão corretos!'));
+    edt_usuario.SetFocus;
+    exit;
+  end;
+  //1.5 Verifica se o Caixa não estava aberto.
+  if isCaixaAberto then begin
+    AvisoErro(pChar('Caixa já consta como status aberto!'));
+    btn_fechar.Visible := true;
+    exit;
+  end;
+
+  registroCaixaPDV.valorAbertura := StrToCurr(edt_valor.Text);
+  registroCaixaPDV.caixaNumero   := edt_caixa.Text;
+
+  //2. Registro de Caixa no BD.
+  with dm.FDQueryCaixa do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('INSERT INTO caixa_pdv');
+    SQL.Add('( data_abertura, hora_abertura, valor_abertura, funcionario_abertura, gerente_autorizador, funcionario_operador, caixa_numero, status )');
+    SQL.Add(' VALUES (:pData_abertura, :pHora_abertura, :pValor_abertura, :pFuncionario_abertura, :pGerente_autorizador, :pFuncionario_operador, :pCaixa_numero, :pStatus)');
+    ParamByName('pData_abertura').AsDate         := StrToDate(FormatDateTime('dd/mm/yyyy',Now));
+    ParamByName('pHora_abertura').AsTime         := StrToTime(FormatDateTime('hh:MM:ss',Now));
+    ParamByName('pValor_abertura').AsCurrency    := registroCaixaPDV.valorAbertura;
+    ParamByName('pFuncionario_abertura').Value   := FuncionarioCaixaPDV.Id;
+    ParamByName('pGerente_autorizador').Value    := registroCaixaPDV.userGerencialId;
+    ParamByName('pFuncionario_operador').Value   := FuncionarioCaixaPDV.Id;
+    ParamByName('pCaixa_numero').Value           := registroCaixaPDV.caixaNumero;
+    ParamByName('pStatus').Value                 := 'A';                        //Aberto.
+    ExecSQL;
+  end;
+  Aviso('Registro de Abertura de Caixa salvo com sucesso!');
+  btn_fechar.Visible := true;
+  limparCampos;
+
+  frm_vendasPDV := Tfrm_vendasPDV.Create(self);
+  frm_vendasPDV.ShowModal;
+end;
+
+procedure Tfrm_caixa.FecharCaixa;
+
+           function GetVlrFechamentoOperadorDia: double;
+           begin
+              with dm.FDQueryMovimentos do begin
+                Close;
+                SQL.Clear;
+                SQL.Add('SELECT sum(valor) as total FROM vendas_pdv_c WHERE data = :pData AND funcionario = :pFuncOperador AND status = :pStatus');
+                ParamByName('pData').Value          :=  FormatDateTime('yyyy/mm/dd', now);
+                ParamByName('pFuncOperador').Value  :=  FuncionarioCaixaPDV.Id;
+                ParamByName('status').Value         :=  'Concluida';
+                Open;
+              end;
+              result := dm.FDQueryMovimentos.FieldByName('total').AsFloat;
+           end;
+
+begin
+  //1. Validações Gerais.
+  //1.1 Verificar validação gerencial.
+  if edt_usuario.isVazio then begin
+     AvisoAlerta(pChar('Campo usuário gerencial deve ser preenchido'));
+     exit;
+  end;
+  if edt_senha.isVazio then begin
+     AvisoAlerta(pChar('Campo senha gerencial deve ser preenchido'));
+     exit;
+  end;
+  //1.2 Verificar validação de valor inicio/fechamento.
+  if edt_valor.isVazio then begin
+     AvisoAlerta(pChar('Campo valor deve ser preenchido'));
+     exit;
+  end;
+  //1.3 Verificar validação de identificação de caixa.
+  if edt_caixa.isVazio then begin
+     AvisoAlerta(pChar('Campo número do caixa deve ser preenchido'));
+     exit;
+  end;
+  //1.4 Confirma validação gerencial no BD.
+  if not(getAutorizacaoGerencial(edt_usuario.Text, edt_senha.Text)) then begin
+    AvisoErro(pChar('Erro de Autorização Gerencial, verifique usuario ou senha se estão corretos!'));
+    edt_usuario.SetFocus;
+    exit;
+  end;
+  //1.5 Verifica se o Caixa estava aberto.
+  if not(isCaixaAberto) then begin
+    AvisoErro(pChar('Caixa já consta como status fechado!'));
+    exit;
+  end;
+
+  registroCaixaPDV.caixaNumero   := edt_caixa.Text;
+
+  //2. Recupera o total vendido pelo operador no caixa no dia.
+  registroCaixaPDV.valorFechamento := GetVlrFechamentoOperadorDia;
+  registroCaixaPDV.valorQuebra := registroCaixaPDV.valorAbertura - registroCaixaPDV.valorVendido;
+
+  //3. Registro de Caixa no BD.
+  with dm.FDQueryCaixa do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('UPDATE caixa_pdv');
+    SQL.Add('SET data_fechamento = :pData_fechamento, hora_fechamento = :pHora_fechamento, funcionario_fechamento = :pFuncionario_fechamento , valor_fechamento =  :pValor_fechamento, 	valor_quebra = :pValor_quebra , valor_vendido = :pValor_vendido, status = :pStatus)');
+    ParamByName('pData_fechamento').AsDate               := StrToDate(FormatDateTime('dd/mm/yyyy',Now));
+    ParamByName('pHora_fechamento').AsTime               := StrToTime(FormatDateTime('hh:MM:ss',Now));
+    ParamByName('pFuncionario_fechamento').Value         := FuncionarioCaixaPDV.Id;
+    ParamByName('pValor_fechamento').AsCurrency          := registroCaixaPDV.valorFechamento;
+    ParamByName('pValor_quebra').AsCurrency              := 0;
+    ParamByName('pValor_vendido').AsCurrency             := registroCaixaPDV.valorFechamento;
+    ParamByName('pStatus').Value                         := 'F';                //Fechado.
+    ExecSQL;
+  end;
+  Aviso('Registro de Fechamento de Caixa salvo com sucesso!');
+  btn_fechar.Visible := true;
+  limparCampos;
+end;
+
+procedure Tfrm_caixa.btn_abrirClick(Sender: TObject);
+begin
+  AbrirCaixa;
+  buscarByData;
+end;
+
+procedure Tfrm_caixa.btn_fecharClick(Sender: TObject);
+begin
+//
+end;
+
+procedure Tfrm_caixa.btn_novoClick(Sender: TObject);
+begin
+  limparCampos;
+  HabilitarCampos;
+  edt_usuario.SetFocus;
+end;
+
+procedure Tfrm_caixa.buscarByData;
+begin
+   with dm.FDQueryCaixa do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT *, funcionarios.nome as funcAbertura, funcionarios.nome as funcOperador, usuarios.nome as gerenteAutorizador FROM caixa_pdv ');
+    SQL.Add('INNER JOIN funcionarios ON funcionarios.id = caixa_pdv.funcionario_abertura');
+    SQL.Add('INNER JOIN usuarios     ON usuarios.id = caixa_pdv.gerente_autorizador');
+    SQL.Add('WHERE data_abertura = :pDataAbertura ORDER BY data_abertura DESC');
+    ParamByName('pDataAbertura').Value := FormatDateTime('yyyy/mm/dd',DateTimePickerAbertura.Date);
+    Open();
+  end;
+
+  //Escolhi fazer direto na QueryCaixa no Data Module, mas caso quisesse poderia ter feito esse FORMATO GRID.
+  {//0. coluna: ID
+  GridCaixa.Columns.Items[0].FieldName     := 'id';
+  GridCaixa.Columns.Items[0].Title.Caption := 'Id';
+  GridCaixa.Columns.Items[0].Visible       := false;
+  //1. coluna: 	data_abertura
+  GridCaixa.Columns.Items[1].FieldName     := 'data_abertura';
+  GridCaixa.Columns.Items[1].Title.Caption := 'Dt. Abert.';
+  GridCaixa.Columns.Items[1].Width         := 60;
+  //2. coluna: hora_abertura
+  GridCaixa.Columns.Items[2].FieldName     := 'hora_abertura';
+  GridCaixa.Columns.Items[2].Title.Caption := 'Hr. Abert.';
+  GridCaixa.Columns.Items[2].Width         := 60;
+  GridCaixa.Columns[2].Alignment           := taCenter;
+  //3. coluna: valor_abertura
+  GridCaixa.Columns.Items[3].FieldName     := 'valor_abertura';
+  GridCaixa.Columns.Items[3].Title.Caption := 'Vlr. Abert.';
+  GridCaixa.Columns.Items[3].Width         := 60;
+  TFloatField(dm.FDQueryCaixa.FieldByName('valor_abertura')).DisplayFormat := 'R$ #,,,,0.00';
+  //4. coluna: 	funcionario_abertura
+  GridCaixa.Columns.Items[4].FieldName     := 'funcionario_abertura';
+  GridCaixa.Columns.Items[4].Title.Caption := 'Func. Abert.';
+  GridCaixa.Columns.Items[4].Width         := 120;
+  //5. coluna: gerente_autorizador
+  GridCaixa.Columns.Items[5].FieldName     := 'gerente_autorizador';
+  GridCaixa.Columns.Items[5].Title.Caption := 'Gerente Autorizador';
+  GridCaixa.Columns.Items[5].Width         := 120;
+  //6.  coluna: funcionario_operador
+  GridCaixa.Columns.Items[6].FieldName     := 'funcionario_operador';
+  GridCaixa.Columns.Items[6].Title.Caption := 'Func. Operador.';
+  GridCaixa.Columns.Items[6].Width         := 120;
+  //7.  coluna: funcionario_fechamento
+  GridCaixa.Columns.Items[7].FieldName     := 'funcionario_fechamento';
+  GridCaixa.Columns.Items[7].Title.Caption := 'Func. fech.';
+  GridCaixa.Columns.Items[7].Width         := 120;
+  //8.  coluna: data_fechamento
+  GridCaixa.Columns.Items[8].FieldName     := 'data_fechamento';
+  GridCaixa.Columns.Items[8].Title.Caption := 'Dt. Fech.';
+  GridCaixa.Columns.Items[8].Width         := 60;
+  //9. coluna: hora_fechamento
+  GridCaixa.Columns.Items[9].FieldName     := 'hora_fechamento';
+  GridCaixa.Columns.Items[9].Title.Caption := 'Hr. Fech.';
+  GridCaixa.Columns.Items[9].Width         := 60;
+  //10. coluna: valor_fechamento
+  GridCaixa.Columns.Items[10].FieldName     := 'valor_fechamento';
+  GridCaixa.Columns.Items[10].Title.Caption := 'Vlr. Fech.';
+  GridCaixa.Columns.Items[10].Width         := 60;
+  TFloatField(dm.FDQueryCaixa.FieldByName('valor_fechamento')).DisplayFormat := 'R$ #,,,,0.00';
+  //11. coluna: valor_quebra
+  GridCaixa.Columns.Items[11].FieldName     := 'valor_quebra';
+  GridCaixa.Columns.Items[11].Title.Caption := 'Vlr. Quebra';
+  GridCaixa.Columns.Items[11].Width         := 60;
+  //12. coluna: caixa_numero
+  GridCaixa.Columns.Items[12].FieldName     := 'caixa_numero';
+  GridCaixa.Columns.Items[12].Title.Caption := 'Cx. Num.';
+  GridCaixa.Columns.Items[12].Width         := 60;
+  //13. coluna: valor_vendido
+  GridCaixa.Columns.Items[13].FieldName     := 'valor_vendido';
+  GridCaixa.Columns.Items[13].Title.Caption := 'Vlr. Venda';
+  GridCaixa.Columns.Items[13].Width         := 60;
+  TFloatField(dm.FDQueryCaixa.FieldByName('valor_vendido')).DisplayFormat := 'R$ #,,,,0.00'; }
+end;
+
+procedure Tfrm_caixa.DateTimePickerAberturaChange(Sender: TObject);
+begin
+  buscarByData;
+end;
+
+procedure Tfrm_caixa.DesabilitarCampos;
+begin
+  edt_usuario.Enabled := false;
+  edt_senha.Enabled   := false;
+  edt_valor.Enabled   := false;
+  edt_caixa.Enabled   := false;
+end;
+
+procedure Tfrm_caixa.edt_caixaExit(Sender: TObject);
+begin
+  AbrirCaixa;
+  buscarByData;
+end;
+
+
+
+procedure Tfrm_caixa.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+   If key = #13 then Begin
+    //se for, passa o foco para o próximo campo, zerando o valor da variável Key
+    Key:= #0;
+    Perform(Wm_NextDlgCtl,0,0);
+  end;
+end;
+
+procedure Tfrm_caixa.FormShow(Sender: TObject);
+begin
+  DateTimePickerAbertura.Date := Date;
+  buscarByData;
+  limparCampos;
+  btn_novo.Visible := true;
+end;
+
+
+
+procedure Tfrm_caixa.HabilitarCampos;
+begin
+  edt_usuario.Enabled := true;
+  edt_senha.Enabled   := true;
+  edt_valor.Enabled   := true;
+  edt_caixa.Enabled   := true;
+end;
+
+function Tfrm_caixa.isCaixaAberto: boolean;
+begin
+  result := false;
+  with dm.FDQuerySuporte do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT status FROM caixa_pdv WHERE status = :pStatus AND caixa_numero = :pCaixaNumero');
+    ParamByName('pStatus').Value      := 'A';
+    ParamByName('pCaixaNumero').Value := edt_caixa.Text;
+    Open();
+  end;
+  if not(dm.FDQuerySuporte.IsEmpty) then result := true;
+end;
+
+procedure Tfrm_caixa.limparCampos;
+var
+ i:integer;
+begin
+  for i := 0 to ComponentCount -1 do begin
+    if Components[i] is TEdit then begin
+      TEdit(Components[i]).Text := '';
+    end;
+  end;
+end;
+
+end.

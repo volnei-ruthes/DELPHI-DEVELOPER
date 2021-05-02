@@ -21,7 +21,11 @@ uses
   u_loginPDV in 'resources\u_loginPDV.pas' {frm_loginPDV},
   u_movimentacoes in 'resources\u_movimentacoes.pas' {frm_movimentacoes},
   u_gastos in 'resources\u_gastos.pas' {frm_gastos},
-  u_listarVendas in 'resources\u_listarVendas.pas' {frm_ListarVendas};
+  u_listarVendas in 'resources\u_listarVendas.pas' {frm_ListarVendas},
+  u_certificadoDigital in 'resources\u_certificadoDigital.pas' {frm_certificadoDigital},
+  u_caixa in 'resources\u_caixa.pas' {frm_caixa},
+  u_fluxoCaixa in 'resources\u_fluxoCaixa.pas' {frm_fluxoCaixa},
+  u_filtroRelatorios in 'resources\u_filtroRelatorios.pas' {frm_filtroRelatorios};
 
 {$R *.res}
 
@@ -31,5 +35,10 @@ begin
   Application.CreateForm(TDM, DM);
   Application.CreateForm(Tfrm_login, frm_login);
   Application.CreateForm(Tfrm_menu, frm_menu);
+  Application.CreateForm(Tfrm_vendasPDV, frm_vendasPDV);
+  Application.CreateForm(Tfrm_certificadoDigital, frm_certificadoDigital);
+  Application.CreateForm(Tfrm_caixa, frm_caixa);
+  Application.CreateForm(Tfrm_fluxoCaixa, frm_fluxoCaixa);
+  Application.CreateForm(Tfrm_filtroRelatorios, frm_filtroRelatorios);
   Application.Run;
 end.

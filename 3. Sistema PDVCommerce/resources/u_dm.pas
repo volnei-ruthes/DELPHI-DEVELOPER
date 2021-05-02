@@ -8,7 +8,7 @@ uses
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MySQL,
   FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Wait, Data.DB, FireDAC.Comp.Client,
   FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
-  FireDAC.Comp.DataSet;
+  FireDAC.Comp.DataSet, frxClass, frxDBSet;
 
 type
   TDM = class(TDataModule)
@@ -59,6 +59,34 @@ type
     DataSourceMovimentos: TDataSource;
     FDQueryGastos: TFDQuery;
     DataSourceGastos: TDataSource;
+    frxReportRelVendaComprovante: TfrxReport;
+    frxDBDatasetVendasC: TfrxDBDataset;
+    frxDBDatasetVendasD: TfrxDBDataset;
+    FDQueryCaixa: TFDQuery;
+    DataSourceCaixa: TDataSource;
+    FDQueryCaixaid: TFDAutoIncField;
+    FDQueryCaixadata_abertura: TDateField;
+    FDQueryCaixahora_abertura: TTimeField;
+    FDQueryCaixavalor_abertura: TBCDField;
+    FDQueryCaixafuncionario_abertura: TIntegerField;
+    FDQueryCaixagerente_autorizador: TIntegerField;
+    FDQueryCaixafuncionario_operador: TIntegerField;
+    FDQueryCaixafuncionario_fechamento: TIntegerField;
+    FDQueryCaixadata_fechamento: TDateField;
+    FDQueryCaixahora_fechamento: TTimeField;
+    FDQueryCaixavalor_fechamento: TBCDField;
+    FDQueryCaixavalor_quebra: TBCDField;
+    FDQueryCaixacaixa_numero: TStringField;
+    FDQueryCaixavalor_vendido: TBCDField;
+    FDQueryCaixafuncAbertura: TStringField;
+    FDQueryCaixafuncOperador: TStringField;
+    FDQueryCaixagerenteAutorizador: TStringField;
+    FDQueryCaixastatus: TStringField;
+    frxReportCaixaFluxo: TfrxReport;
+    frxDBDatasetCaixaFluxo: TfrxDBDataset;
+    FDQueryCaixaRel: TFDQuery;
+    frxReportProdutos: TfrxReport;
+    frxDBDatasetProdutos: TfrxDBDataset;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -95,6 +123,25 @@ type
     estoqueProduto:integer;
   end;
 
+  TRegistroCaixaPDV = record
+    userGerencial      : string;
+    userGerencialId    : string;
+    nivelGerencial     : string;
+    dataAbertura       : TDate;
+    horaAbertura       : TTime;
+    dataFechamento     : TDate;
+    horaFechamento     : TTime;
+    valorAbertura      : double;
+    valorFechamento    : double;
+    valorQuebra        : double;
+    valorVendido       : double;
+    funcAbertura       : string;
+    funcOperador       : string;
+    funcFechamento     : string;
+    caixaNumero        : string;
+    status             : string;
+  end;
+
    TVendaPDV = record
     totalItens    : double;
     subtotal      : double;
@@ -125,6 +172,14 @@ type
     total : double;
   end;
 
+  TCertificadoDigital = record
+    certificadoDigNumSerie:string;
+  end;
+
+  TRelatorioGeral = record
+    tipo :string;
+  end;
+
 var
   DM: TDM;
 
@@ -137,6 +192,9 @@ var
   vendaPDV             : TVendaPDV;
   FuncionarioCaixaPDV  : TFuncionarioCaixaPDV;
   ItemExcluidoPDV      : TItemExcluidoPDV;
+  certificadoDigital   : TCertificadoDigital;
+  registroCaixaPDV     : TRegistroCaixaPDV;
+  relatorioGeral       : TRelatorioGeral;
   Doc, codProdutos : string;
 
 implementation

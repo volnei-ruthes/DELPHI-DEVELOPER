@@ -1,0 +1,85 @@
+unit u_certificadoDigital;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
+  Vcl.Grids;
+
+type
+  Tfrm_certificadoDigital = class(TForm)
+    StringGridCertificados: TStringGrid;
+    Panel1: TPanel;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_certificadoDigital: Tfrm_certificadoDigital;
+
+implementation
+
+{$R *.dfm}
+
+end.
+
+{ Modelo de configuração achado no github
+
+  //certificado A1
+  if configuracao_nf.CERTIFICADO_DIGITAL_MODELO = '1' then
+  begin
+    //se não tiver certificado
+    if configuracao_nf.CERTIFICADO_DIGITAL_NOME = '' then
+    begin
+      result.code := 0;
+      result.message := 'Certificado não configurado';
+      exit;
+    end;
+
+    str_certificado := load_certificado_a1();
+    if (str_certificado = '') or (not FileExists(str_certificado)) then
+	  begin
+		  result.code := 0;
+      result.message := 'Certificado não encontrado';
+      exit;
+    end;
+
+    dm_conexao.ACBrNFe.Configuracoes.Geral.SSLLib := TSSLLib(libOpenSSL);
+	  dm_conexao.ACBrNFe.Configuracoes.Geral.SSLCryptLib := TSSLCryptLib(cryOpenSSL);
+	  dm_conexao.ACBrNFe.Configuracoes.Geral.SSLHttpLib := TSSLHttpLib(httpOpenSSL);
+    dm_conexao.ACBrNFe.Configuracoes.Geral.SSLXmlSignLib := TSSLXmlSignLib(xsLibXml2);
+    dm_conexao.ACBrNFe.Configuracoes.Certificados.ArquivoPFX := str_certificado;
+    dm_conexao.ACBrNFe.Configuracoes.Certificados.Senha := configuracao_nf.CERTIFICADO_DIGITAL_SENHA;
+  end
+  else //certificado A3
+  begin
+    //se não tiver certificado
+    if configuracao_nf.CERTIFICADO_DIGITAL_SERIE = '' then
+    begin
+      result.code := 0;
+      result.message := 'Certificado não configurado';
+      exit;
+    end;
+
+    dm_conexao.ACBrNFe.Configuracoes.Geral.SSLLib := TSSLLib(libWinCrypt);
+	  dm_conexao.ACBrNFe.Configuracoes.Geral.SSLCryptLib := TSSLCryptLib(cryWinCrypt);
+	  dm_conexao.ACBrNFe.Configuracoes.Geral.SSLHttpLib := TSSLHttpLib(httpWinHttp);
+ 	  dm_conexao.ACBrNFe.Configuracoes.Geral.SSLXmlSignLib := TSSLXmlSignLib(xsMsXml);
+    dm_conexao.ACBrNFe.Configuracoes.Certificados.NumeroSerie := configuracao_nf.CERTIFICADO_DIGITAL_SERIE;
+  end;
+
+  dm_conexao.ACBrNFe.Configuracoes.WebServices.UF := empresa_logado.UF;
+
+  if not dm_conexao.ACBrNFe.Configuracoes.Certificados.VerificarValidade then
+  begin
+    result.code := 0;
+    result.message := 'Certificado inválido ou vencido';
+    exit;
+  end;
+
+}

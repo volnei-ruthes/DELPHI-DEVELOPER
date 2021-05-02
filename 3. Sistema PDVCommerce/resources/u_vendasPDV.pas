@@ -5,7 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
-  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.MPlayer;
+  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.MPlayer, ACBrBase, ACBrDFe, ACBrNFe;
+
+
 
 type
   Tfrm_vendasPDV = class(TForm)
@@ -42,6 +44,7 @@ type
     Label9: TLabel;
     Label10: TLabel;
     Label11: TLabel;
+    ACBrNFCe: TACBrNFe;
     procedure FormShow(Sender: TObject);
     procedure edt_codigoBarraChange(Sender: TObject);
     procedure edt_qtdeExit(Sender: TObject);
@@ -61,7 +64,10 @@ type
     procedure limparImagemProduto;
     procedure listarDetalhesVenda;
     procedure ExibeImgProduto(DataSet : TDataSet; BlobFieldName : String; ImageExibicao : TImage);
-    function KeyIsDown(const Key: integer): boolean;
+    function  KeyIsDown(const Key: integer): boolean;
+    procedure iniciarAcbrNFCe;
+    procedure gerarAcbrNFCe;
+    procedure imprimirCupomFiscalFast;
   public
     { Public declarations }
   end;
@@ -79,12 +85,16 @@ type
 var
   frm_vendasPDV        : Tfrm_vendasPDV;  //Form
   isProdutoFind        : boolean;
+  idVendas_pdv_c       : integer;  //Id da Venda após salva no cabeçalho.
 
 implementation
 
 {$R *.dfm}
 
-uses u_dm, u_geralHelper, u_cancelaItemPDV, u_loginPDV, TypInfo;
+uses
+  u_dm, u_geralHelper, u_cancelaItemPDV, u_loginPDV, TypInfo, ACBrUtil, ACBrNFeNotasFiscais, pcnConversao, pcnConversaoNFe,
+  ACBrNFSe, pcnNFe, pnfsConversao, System.Math;
+
 
 { TAviso }
 
@@ -193,8 +203,6 @@ begin
 end;
 
 procedure Tfrm_vendasPDV.edt_valorRecebidoExit(Sender: TObject);
-var
-  idVendas_pdv_c : integer;
 begin
   //Valor recebido - troco a devolver.
   VendaPDV.totalRecebido := strTofloat(edt_valorRecebido.Text);
@@ -264,6 +272,20 @@ begin
       end;
       showmessage('Status da Venda: Concluida!');
       limparGeral;
+
+      //--------------------ACBR ENVIO DA NOTA FISCAL--------------------------//
+
+      //1. Seta a pastra padrão com schemas xsds.
+      ////iniciarAcbrNFCe;
+      //2. Gera e Envia NFCe (cupom fiscal).
+      ////gerarAcbrNFCe;
+      //3. Gera cupom não fiscal (baseado no cupom NFCe).
+
+      //------------------IMPRESSÃO DE CUPOM NÃO FISCAL------------------------//
+
+      //1. Imprimir cupom não fiscal criado no FAST REPORT.
+      imprimirCupomFiscalFast;
+
     except on E: Exception do
       AvisoErro(pchar('Erro ao finalizar a venda: '+e.Message));
     end;
@@ -271,6 +293,7 @@ begin
   finally
     dm.FDQueryVendasC.Close;
     dm.FDQueryMovimentos.Close;
+    dm.FDQueryVendasD.Close;
   end;
 end;
 
@@ -335,6 +358,230 @@ begin
   limparImagemProduto;
   edt_codigoBarra.SetFocus;
 
+end;
+
+procedure Tfrm_vendasPDV.gerarAcbrNFCe;
+Var
+  NotaFisc: NotaFiscal;
+  item : integer;
+  Produto: TDetCollectionItem;
+  InfoPgto: TpagCollectionItem;
+begin
+
+  ACBrNFCe.NotasFiscais.Clear;
+
+  NotaFisc := ACBrNFCe.NotasFiscais.Add;
+
+  //1. DADOS DA NOTA FISCAL.
+
+  NotaFisc.NFe.Ide.natOp     := 'VENDA';
+  NotaFisc.NFe.Ide.indPag    := ipVista;                                        //Uses: PcnConversao {ipPrazo;ipOutras;ipNenhum} no form. pode usar cbbox tipo de pagamento, e setar esse campo.
+  NotaFisc.NFe.Ide.modelo    := 65;
+  NotaFisc.NFe.Ide.serie     := 1;
+  NotaFisc.NFe.Ide.nNF       := idVendas_pdv_c;                                 //numero da nfe será o Id da venda.
+  NotaFisc.NFe.Ide.dEmi      := Date;
+  NotaFisc.NFe.Ide.dSaiEnt   := Date;
+  NotaFisc.NFe.Ide.hSaiEnt   := Now;
+  NotaFisc.NFe.Ide.tpNF      := tnSaida;                                        //Uses: PcnConversao {tnEntrada caso fornecedor}
+  NotaFisc.NFe.Ide.tpEmis    := teNormal;
+  NotaFisc.NFe.Ide.tpAmb     := taHomologacao;                                  //Lembrar de trocar esta variável quando for para ambiente de produção.
+  NotaFisc.NFe.Ide.verProc   := '1.0.0.0';                                      //Minha versão do sistema.
+  NotaFisc.NFe.Ide.cUF       := 41;                                             //Código do Estado.
+  NotaFisc.NFe.Ide.cMunFG    := 4118501;                                        //Código do Municipio.
+  NotaFisc.NFe.Ide.finNFe    := fnNormal;
+
+  //2. DADOS DO EMITENTE (Empresa).
+
+  NotaFisc.NFe.Emit.CNPJCPF           := '18311776000198';
+  NotaFisc.NFe.Emit.IE                := '';
+  NotaFisc.NFe.Emit.xNome             := 'Q-Cursos Networks';
+  NotaFisc.NFe.Emit.xFant             := 'Q-Cursos';
+  NotaFisc.NFe.Emit.EnderEmit.fone    := '(31)3333-3333';
+  NotaFisc.NFe.Emit.EnderEmit.CEP     := 30512660;
+  NotaFisc.NFe.Emit.EnderEmit.xLgr    := 'Rua A';
+  NotaFisc.NFe.Emit.EnderEmit.nro     := '325';
+  NotaFisc.NFe.Emit.EnderEmit.xCpl    := '';
+  NotaFisc.NFe.Emit.EnderEmit.xBairro := 'Santa Monica';
+  NotaFisc.NFe.Emit.EnderEmit.cMun    := 0624123;
+  NotaFisc.NFe.Emit.EnderEmit.xMun    := 'Belo Horizonte';
+  NotaFisc.NFe.Emit.EnderEmit.UF      := 'MG';
+  NotaFisc.NFe.Emit.enderEmit.cPais   := 1058;
+  NotaFisc.NFe.Emit.enderEmit.xPais   := 'BRASIL';
+  NotaFisc.NFe.Emit.IEST              := '';
+  //NotaFisc.NFe.Emit.IM              := '2648800';                             // Preencher caso de existir serviços na nota
+  //NotaFisc.NFe.Emit.CNAE            := '6201500';                             // Verificar na minha cidade do emissor da NFe se é permitido.
+  NotaFisc.NFe.Emit.CRT               := crtSimplesNacional;                    //Uses: PcnConversao {1-crtSimplesNacional, 2-crtSimplesExcessoReceita, 3-crtRegimeNormal)  //DADOS DO DESTINATÁRIO
+
+  //3. DADOS DO DESTINATARIO. (Como é NFCe para consumidor final, não há necessidade. Caso fosse para NFSe ou NFE teria que preencher)
+
+  //NotaFisc.NFe.Dest.CNPJCPF           := '05481336000137';
+  //NotaFisc.NFe.Dest.IE                := '687138770110';
+  //NotaFisc.NFe.Dest.ISUF              := '';
+  //NotaFisc.NFe.Dest.xNome             := 'D.J. COM. E LOCAÇÃO DE SOFTWARES LTDA - ME';
+  //NotaFisc.NFe.Dest.EnderDest.Fone    := '1532599600';
+  //NotaFisc.NFe.Dest.EnderDest.CEP     := 18270170;
+  //NotaFisc.NFe.Dest.EnderDest.xLgr    := 'Rua Coronel Aureliano de Camargo';
+  //NotaFisc.NFe.Dest.EnderDest.nro     := '973';
+  //NotaFisc.NFe.Dest.EnderDest.xCpl    := '';
+  //NotaFisc.NFe.Dest.EnderDest.xBairro := 'Centro';
+  //NotaFisc.NFe.Dest.EnderDest.cMun    := 3554003;
+  //NotaFisc.NFe.Dest.EnderDest.xMun    := 'Tatui';
+  //NotaFisc.NFe.Dest.EnderDest.UF      := 'SP';
+  //NotaFisc.NFe.Dest.EnderDest.cPais   := 1058;
+  //NotaFisc.NFe.Dest.EnderDest.xPais   := 'BRASIL';
+
+  //4. ITENS DA VENDA NA NOTA - Relacionando os detalhes da venda (Itens) na NOTA.
+
+  item := 1;
+  //4.1 Trazer todos os itens de uma determinada venda.
+  with dm.FDQuerySuporte do begin //Tive que usar a query suporte (curinga) porque no data module o fdqueryVendasD esta com fields já definido no componente, e ao fazer o Inner sem colocar novos campos lá da bug.
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT * FROM vendas_pdv_d ');
+    SQL.Add('INNER JOIN produtos ON vendas_pdv_d.produto_id = produtos.id');
+    SQL.Add('WHERE vendas_id = :pIdVenda ORDER BY vendas_pdv_d.id ASC');
+    ParamByName('pIdVenda').Value := idVendas_pdv_c;                            //Id da Venda do cabeçalho.
+    Open;
+    First;
+  end;
+  //4.2 Varrer a Query com todos os itens de uma venda.
+  while not dm.FDQuerySuporte.eof do begin
+    Produto               := NotaFisc.NFe.Det.New;
+    Produto.Prod.nItem    := item;                                              // Número sequencial, para cada item deve ser incrementado
+    Produto.Prod.cProd    := dm.FDQuerySuporte.FieldByName('codigo').Value;     //Código do produto (barra).
+    Produto.Prod.cEAN     := '7896523206646';
+    Produto.Prod.xProd    := dm.FDQuerySuporte.FieldByName('produto').Value;
+    Produto.Prod.NCM      := '94051010';                                        // Tabela NCM disponível em  http://www.receita.fazenda.gov.br/Aliquotas/DownloadArqTIPI.htm
+    Produto.Prod.EXTIPI   := '';
+    Produto.Prod.CFOP     := '5101';
+    Produto.Prod.uCom     := 'UN';
+    Produto.Prod.qCom     := dm.FDQuerySuporte.FieldByName('quantidade').Value;
+    Produto.Prod.vUnCom   := dm.FDQuerySuporte.FieldByName('valor').Value;
+    Produto.Prod.vProd    := dm.FDQuerySuporte.FieldByName('valor').Value;
+
+    //4.3 INFORMAÇÕES DE IMPOSTOS SOBRE OS PRODUTOS
+    Produto.Prod.cEANTrib  := '7896523206646';
+    Produto.Prod.uTrib     := 'UN';
+    Produto.Prod.qTrib     := 1;
+    Produto.Prod.vUnTrib   := 100;
+    Produto.Prod.vOutro    := 0;
+    Produto.Prod.vFrete    := 0;
+    Produto.Prod.vSeg      := 0;
+    Produto.Prod.vDesc     := 0;
+    Produto.Prod.CEST := '1111111';
+
+    Produto.infAdProd := 'Informacao Adicional do Produto';
+
+    //4.4 LEI DA TRANSPARENCIA NOS IMPOSTOS.
+    Produto.Imposto.vTotTrib := 0;
+    Produto.Imposto.ICMS.CST          := cst00;
+    Produto.Imposto.ICMS.orig    := oeNacional;
+    Produto.Imposto.ICMS.modBC   := dbiValorOperacao;
+    Produto.Imposto.ICMS.vBC     := 100;
+    Produto.Imposto.ICMS.pICMS   := 18;
+    Produto.Imposto.ICMS.vICMS   := 18;
+    Produto.Imposto.ICMS.modBCST := dbisMargemValorAgregado;
+    Produto.Imposto.ICMS.pMVAST  := 0;
+    Produto.Imposto.ICMS.pRedBCST:= 0;
+    Produto.Imposto.ICMS.vBCST   := 0;
+    Produto.Imposto.ICMS.pICMSST := 0;
+    Produto.Imposto.ICMS.vICMSST := 0;
+    Produto.Imposto.ICMS.pRedBC  := 0;
+
+    //4.5 PARTILHA ICMS E FUNDO DE POBREZA.
+    Produto.Imposto.ICMSUFDest.vBCUFDest      := 0.00;
+    Produto.Imposto.ICMSUFDest.pFCPUFDest     := 0.00;
+    Produto.Imposto.ICMSUFDest.pICMSUFDest    := 0.00;
+    Produto.Imposto.ICMSUFDest.pICMSInter     := 0.00;
+    Produto.Imposto.ICMSUFDest.pICMSInterPart := 0.00;
+    Produto.Imposto.ICMSUFDest.vFCPUFDest     := 0.00;
+    Produto.Imposto.ICMSUFDest.vICMSUFDest    := 0.00;
+    Produto.Imposto.ICMSUFDest.vICMSUFRemet   := 0.00;
+
+    item := item + 1;                                                           //Incrementa Nº sequencial do item da nota.
+    dm.FDQuerySuporte.Next;                                                     //Próximo item da nota.
+  end;
+
+  //5. TOTALIZADORES DA NOTA FISCAL.
+
+  NotaFisc.NFe.Total.ICMSTot.vBC     := 100;
+  NotaFisc.NFe.Total.ICMSTot.vICMS   := 18;
+  NotaFisc.NFe.Total.ICMSTot.vBCST   := 0;
+  NotaFisc.NFe.Total.ICMSTot.vST     := 0;
+  NotaFisc.NFe.Total.ICMSTot.vProd   := vendaPDV.subtotal;
+  NotaFisc.NFe.Total.ICMSTot.vFrete  := 0;
+  NotaFisc.NFe.Total.ICMSTot.vSeg    := 0;
+  NotaFisc.NFe.Total.ICMSTot.vDesc   := vendaPDV.totalDesconto;
+  NotaFisc.NFe.Total.ICMSTot.vII     := 0;
+  NotaFisc.NFe.Total.ICMSTot.vIPI    := 0;
+  NotaFisc.NFe.Total.ICMSTot.vPIS    := 0;
+  NotaFisc.NFe.Total.ICMSTot.vCOFINS := 0;
+  NotaFisc.NFe.Total.ICMSTot.vOutro  := 0;
+  NotaFisc.NFe.Total.ICMSTot.vNF     := vendaPDV.totalCompras;
+
+  //5.1 Lei transparencia de impostos.
+  NotaFisc.NFe.Total.ICMSTot.vTotTrib := 0;
+
+  //5.2 Partilha do icms e fundo de probreza.
+  NotaFisc.NFe.Total.ICMSTot.vFCPUFDest   := 0.00;
+  NotaFisc.NFe.Total.ICMSTot.vICMSUFDest  := 0.00;
+  NotaFisc.NFe.Total.ICMSTot.vICMSUFRemet := 0.00;
+  //5.3 Frete.
+  NotaFisc.NFe.Transp.modFrete := mfSemFrete;  //SEM FRETE
+
+  //6. Informações de pagamento.
+
+  InfoPgto := NotaFisc.NFe.pag.New;
+  InfoPgto.indPag := ipVista;                                                   //Uses: PcnConversao {ipPrazo;ipOutras;ipNenhum} no form. pode usar cbbox tipo de pagamento, e setar esse campo.
+  InfoPgto.tPag   := fpDinheiro;
+  InfoPgto.vPag   := dm.FDQuerySuporte.FieldByName('valor').Value;              //Total que o cliente pagou já com desconto.. ex. vendaPDV.totalCompras;
+
+  //7. Seta o número de Serie do Certificado Digital. Assina. Envia.
+  ACBrNFCe.Configuracoes.Certificados.NumeroSerie := certificadoDigital.certificadoDigNumSerie;
+  ACBrNFCe.NotasFiscais.Assinar;
+  ACBrNFCe.Enviar(idVendas_pdv_c);
+  ShowMessage(ACBrNFCe.WebServices.StatusServico.Msg);
+end;
+
+procedure Tfrm_vendasPDV.imprimirCupomFiscalFast;
+var
+  pathRelatorio: string;
+begin
+  //-------------------------FAST REPORT----------------------------//
+  //1. GET Vendas Cabeçalho Tab. vendas_pdv_c
+  with dm.FDQueryVendasC do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT * FROM vendas_pdv_c WHERE id = :pId');
+    ParamByName('pId').Value  := idVendas_pdv_c;
+    Open();
+  end;
+  //2. GET Vendas Detalhes Tab. vendas_pdv_d
+  with dm.FDQueryVendasD do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT * FROM vendas_pdv_d WHERE vendas_id = :pVendasId');
+    ParamByName('pVendasId').Value  := idVendas_pdv_c;
+    Open();
+  end;
+  //3. CHAMA FAST REPORT.
+  if not(dm.FDQueryVendasC.IsEmpty) then begin
+    pathRelatorio := GetCurrentDir + '\rel\relComprovanteVenda.fr3';
+    DM.frxReportRelVendaComprovante.LoadFromFile(pathRelatorio);
+    //3.1 Imprimi o Relatorio.
+    //DM.frxReportRelVendaComprovante.Print; Em produção pode-se mandar imprimir direto o cupom.
+    DM.frxReportRelVendaComprovante.ShowReport(); //Em homologação estou mandando mostrar primeiro para depois imprimir...
+    /////**Para setar variaveis pelo codigo, segue um exemplo: frxReport1.Variables['nome_da_variavel'].Value := Conteudo;
+  end;
+end;
+
+procedure Tfrm_vendasPDV.iniciarAcbrNFCe;
+var
+  pathAcbrNFCe: string;
+begin
+  //1. Get Pasta padrão com os esquemas xsds da nota fiscal eletronica consumidor.
+  pathAcbrNFCe := ExtractFilePath(Application.ExeName)+'nfe\';
+  ACBrNFCe.Configuracoes.Arquivos.PathSchemas := pathAcbrNFCe;
 end;
 
 procedure Tfrm_vendasPDV.limparGeral;

@@ -25,9 +25,11 @@ type
     procedure btn_CancelarItemClick(Sender: TObject);
     procedure gridListarVendasCellClick(Column: TColumn);
     procedure FormShow(Sender: TObject);
+    procedure btn_ComprovanteClick(Sender: TObject);
   private
     { Private declarations }
      procedure buscarData;
+     procedure imprimirCupomFiscalFast;
   public
     { Public declarations }
   end;
@@ -158,6 +160,14 @@ begin
   end;
 end;
 
+procedure Tfrm_ListarVendas.btn_ComprovanteClick(Sender: TObject);
+begin
+  imprimirCupomFiscalFast;
+  btn_Comprovante.Visible := false;
+  btn_NotaFiscal.Visible  := false;
+  buscarData;
+end;
+
 procedure Tfrm_ListarVendas.buscarData;
 begin
   with dm.FDQueryVendasC do begin
@@ -238,6 +248,41 @@ begin
      btn_CancelarItem.Visible:= true;
      btn_comprovante.Visible := true;
      btn_notaFiscal.Visible  := true;
+  end;
+end;
+
+procedure Tfrm_ListarVendas.imprimirCupomFiscalFast;
+var
+  pathRelatorio: string;
+begin
+  //-------------------------FAST REPORT----------------------------//
+  //**FOI COPIADO DE u_vendasPDV, pois a lista de vendas é um grid de todas as vendas geradas,
+  // logo as informações de cabeçalho SÃO AS MESMAS!
+
+  //1. GET Vendas Cabeçalho Tab. vendas_pdv_c
+  with dm.FDQueryVendasC do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT * FROM vendas_pdv_c WHERE id = :pId');
+    ParamByName('pId').Value  := idVendaC;
+    Open();
+  end;
+  //2. GET Vendas Detalhes Tab. vendas_pdv_d
+  with dm.FDQueryVendasD do begin
+    Close;
+    SQL.Clear;
+    SQL.Add('SELECT * FROM vendas_pdv_d WHERE vendas_id = :pVendasId');
+    ParamByName('pVendasId').Value  := idVendaC;
+    Open();
+  end;
+  //3. CHAMA FAST REPORT.
+  if not(dm.FDQueryVendasC.IsEmpty) then begin
+    pathRelatorio := GetCurrentDir + '\rel\relComprovanteVenda.fr3';
+    DM.frxReportRelVendaComprovante.LoadFromFile(pathRelatorio);
+    //3.1 Imprimi o Relatorio.
+    //DM.frxReportRelVendaComprovante.Print; Em produção pode-se mandar imprimir direto o cupom.
+    DM.frxReportRelVendaComprovante.ShowReport(); //Em homologação estou mandando mostrar primeiro para depois imprimir...
+    /////**Para setar variaveis pelo codigo, segue um exemplo: frxReport1.Variables['nome_da_variavel'].Value := Conteudo;
   end;
 end;
 

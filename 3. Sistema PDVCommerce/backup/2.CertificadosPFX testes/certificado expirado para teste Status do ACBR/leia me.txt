@@ -1,0 +1,8 @@
+Certificado Digital de testes do tipo A1, emitido pela SEFAZ/RS, serve apenas para testes de assinatura digital.
+
+Senha de Instalação: associacao
+
+*** NÃO SERVE PARA CONSUMIR WEB SERVICES ***
+Criador/Autor:	SEFAZ/RS
+Último Download:	26/04/21 05:50 PM
+Downloads:	7261

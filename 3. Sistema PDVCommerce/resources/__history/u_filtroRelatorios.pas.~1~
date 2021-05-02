@@ -1,0 +1,24 @@
+unit u_filtroRelatorios;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
+
+type
+  Tfrm_filtroRelatorios = class(TForm)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frm_filtroRelatorios: Tfrm_filtroRelatorios;
+
+implementation
+
+{$R *.dfm}
+
+end.
