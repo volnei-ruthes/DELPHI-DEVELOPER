@@ -1,0 +1,2 @@
+twain_32_dll DLLFILE "twain_32.dll"
+infoDLLs_data DLLINFO "infoDLLs.txt"
