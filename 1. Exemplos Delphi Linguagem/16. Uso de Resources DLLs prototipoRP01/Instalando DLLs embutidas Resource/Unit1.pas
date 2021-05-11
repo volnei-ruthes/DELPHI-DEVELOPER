@@ -4,34 +4,42 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls;
+  Dialogs, StdCtrls, ShellAPI, Vcl.ComCtrls;
 
 type
+
   TForm1 = class(TForm)
     Button1: TButton;
-    Label1: TLabel;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    Button6: TButton;
+    Memo1: TMemo;
+    Button7: TButton;
+    Memo2: TMemo;
+    Button8: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
   private
     { Private declarations }
     Procedure ResourcesExtractToSaveDLLs(const NomeResource, NomeArquivo: String);
     procedure SetArquivoInfoDlls(pNameArquivo, pArqDll: String);
     Procedure ResourcesExtractToReadInfoDLLs(const NomeResource, NomeArquivo: String);
+    function BuscaMidasDLL(const cPath, cFile: String) : boolean;
+    procedure ListarArquivos(pDiretorio: string; pSub:Boolean);
   public
     { Public declarations }
+
   end;
 
 var
   Form1: TForm1;
-
-
 implementation
 
 {$R *.dfm}
@@ -61,10 +69,74 @@ Begin
   End;
 end;
 
+function TForm1.BuscaMidasDLL(const cPath, cFile: String) : boolean;            //Método de busca Recursivo.
+var
+  S: String;
+  nRet: Integer;
+  Search: TSearchRec;
+begin
+  nRet := FindFirst(cPath+'*.*', faAnyFile or faArchive or faDirectory, Search);
+  while nRet = 0 do
+  begin
+    if (Trim(Search.Name) <> '.') and (Trim(Search.Name) <> '..') then
+    begin
+      { Se for um diretório, chama a função para percorrê-lo. }
+      if Search.Attr and faDirectory > 0 then begin
+        BuscaMidasDLL(IncludeTrailingPathDelimiter(cPath+Search.Name), cFile)
+      { Neste caso estamos fazendo uma busca exata, pode-se fazer um if com pos
+        para buscar extensões partes do nome e etc. }
+      end else if Trim(Search.Name) = cFile then begin
+        Memo1.Lines.Add(cPath+Search.Name);
+      end;
+    end;
+    nRet := FindNext(Search);
+  end;
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+begin
+  BuscaMidasDLL('C:\Windows\', 'midas.dll');
+end;
+
+procedure TForm1.Button8Click(Sender: TObject);
+begin
+ memo2.Lines.Clear;
+ ListarArquivos('C:\', true);
+end;
+
+procedure TForm1.ListarArquivos(pDiretorio: string; pSub:Boolean);
+var F: TSearchRec;
+    Ret: Integer;
+    TempNome: string;
+
+        function TemAtributo(Attr, Val: Integer): Boolean;
+        begin
+          Result := Attr and Val = Val;
+        end;
+
+begin
+  Ret := FindFirst(pDiretorio+'\*.*', faAnyFile, F);
+  try
+    while Ret = 0 do begin
+      if TemAtributo(F.Attr, faDirectory) then begin
+        if (F.Name <> '.') And (F.Name <> '..') then begin
+          if pSub = True then begin
+            TempNome := pDiretorio+'\' + F.Name;
+            ListarArquivos(TempNome, True); //Forma recursiva.
+          end;
+        end;
+      end else if Trim(F.Name) = 'midas.dll' then begin
+        memo2.Lines.Add(pDiretorio+'\'+F.Name);
+      end;
+      Ret := FindNext(F);
+    end;
+  finally
+    FindClose(F);
+  end;
+end;
+
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  
- 
   ResourcesExtractToReadInfoDLLs('infoDLLs_data','infoDLLsteste2.txt');
 end;
 
@@ -158,6 +230,9 @@ begin
   SysUtils.FindClose(sr);
   FileList.SaveToFile(ExtractFilePath(Application.ExeName)+'listaDLLsss.txt');
 end;
+
+
+
 
 end.
  

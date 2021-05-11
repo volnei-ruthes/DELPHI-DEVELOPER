@@ -1,9 +1,9 @@
 object Form1: TForm1
   Left = 192
   Top = 117
-  Width = 928
-  Height = 480
   Caption = 'Form1'
+  ClientHeight = 623
+  ClientWidth = 1073
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,13 +13,6 @@ object Form1: TForm1
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 328
-    Top = 64
-    Width = 32
-    Height = 13
-    Caption = 'Label1'
-  end
   object Button1: TButton
     Left = 168
     Top = 120
@@ -30,8 +23,8 @@ object Form1: TForm1
     OnClick = Button1Click
   end
   object Button2: TButton
-    Left = 648
-    Top = 80
+    Left = 712
+    Top = 8
     Width = 177
     Height = 25
     Caption = 'Modificar data Arquivo'
@@ -57,12 +50,56 @@ object Form1: TForm1
     OnClick = Button4Click
   end
   object Button5: TButton
-    Left = 256
-    Top = 320
+    Left = 119
+    Top = 208
     Width = 241
     Height = 25
     Caption = 'aRQUIVO FIXO TXT '
     TabOrder = 4
     OnClick = Button5Click
+  end
+  object Button6: TButton
+    Left = 456
+    Top = 151
+    Width = 193
+    Height = 41
+    Caption = 'Busca RECURSIVA Midas.DLL'
+    TabOrder = 5
+    OnClick = Button6Click
+  end
+  object Memo1: TMemo
+    Left = 456
+    Top = 32
+    Width = 193
+    Height = 113
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 6
+  end
+  object Button7: TButton
+    Left = 352
+    Top = 400
+    Width = 75
+    Height = 25
+    Caption = 'Button7'
+    TabOrder = 7
+  end
+  object Memo2: TMemo
+    Left = 688
+    Top = 103
+    Width = 361
+    Height = 171
+    Lines.Strings = (
+      'Memo2')
+    TabOrder = 8
+  end
+  object Button8: TButton
+    Left = 744
+    Top = 280
+    Width = 211
+    Height = 65
+    Caption = 'listar midas.dll (rotina MELHOR)'
+    TabOrder = 9
+    OnClick = Button8Click
   end
 end
