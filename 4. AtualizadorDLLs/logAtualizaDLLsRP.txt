@@ -1,0 +1,56 @@
+12/05/2021 14:21:35 - -------Inicio Atualizaçãoao DLLS RP.
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\AtualizadorDLLsRP\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 11 05 2021 1\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 11 05 2021 2\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 12 05 2021 3\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 12 05 2021 4\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 12 05 2021 5\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 12 05 2021 6 testes 1\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\erp\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\erpfix\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\erpfixteste\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\erpteste\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\Instaladores\Delphi\1. Delphi7\2.0 Updates\delphi_7.1_database_supplemental\delphi_7.1_database_supplemental\delphi7\windows\system32\midas.dll
+12/05/2021 14:21:35 - Adcionado na Lista Array midas.dll path no windows: C:\Instaladores\Delphi\1. Delphi7\Install\System32\midas.dll
+12/05/2021 14:21:36 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\bin\midas.dll
+12/05/2021 14:21:36 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\bin64\midas.dll
+12/05/2021 14:21:36 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\Redist\win32\midas.dll
+12/05/2021 14:21:36 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\Redist\win64\midas.dll
+12/05/2021 14:22:00 - Adcionado na Lista Array midas.dll path no windows: C:\Windows\System32\midas.dll
+12/05/2021 14:22:00 - Adcionado na Lista Array midas.dll path no windows: C:\Windows\SysWOW64\midas.dll
+12/05/2021 14:22:08 - -------Fim Atualizaçãoao DLLS RP.
+12/05/2021 14:24:00 - -------Inicio Atualizaçãoao DLLS RP.
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\AtualizadorDLLsRP\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 11 05 2021 1\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 11 05 2021 2\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 12 05 2021 3\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 12 05 2021 4\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 12 05 2021 5\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\backup\AtualizadorDLLsRP 12 05 2021 6 testes 1\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\erp\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\erpfix\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\erpfixteste\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\erpteste\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\Instaladores\Delphi\1. Delphi7\2.0 Updates\delphi_7.1_database_supplemental\delphi_7.1_database_supplemental\delphi7\windows\system32\midas.dll
+12/05/2021 14:24:00 - Adcionado na Lista Array midas.dll path no windows: C:\Instaladores\Delphi\1. Delphi7\Install\System32\midas.dll
+12/05/2021 14:24:01 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\bin\midas.dll
+12/05/2021 14:24:01 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\bin64\midas.dll
+12/05/2021 14:24:01 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\Redist\win32\midas.dll
+12/05/2021 14:24:01 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\Redist\win64\midas.dll
+12/05/2021 14:24:18 - Adcionado na Lista Array midas.dll path no windows: C:\Windows\System32\midas.dll
+12/05/2021 14:24:18 - Adcionado na Lista Array midas.dll path no windows: C:\Windows\SysWOW64\midas.dll
+12/05/2021 14:24:22 - -------Fim Atualizaçãoao DLLS RP.
+12/05/2021 15:12:26 - -------Inicio Atualizaçãoao DLLS RP.
+12/05/2021 15:12:26 - Adcionado na Lista Array midas.dll path no windows: C:\AtualizadorDLLsRP\midas.dll
+12/05/2021 15:12:26 - Adcionado na Lista Array midas.dll path no windows: C:\erp\midas.dll
+12/05/2021 15:12:26 - Adcionado na Lista Array midas.dll path no windows: C:\erpfix\midas.dll
+12/05/2021 15:12:26 - Adcionado na Lista Array midas.dll path no windows: C:\erpfixteste\midas.dll
+12/05/2021 15:12:26 - Adcionado na Lista Array midas.dll path no windows: C:\erpteste\midas.dll
+12/05/2021 15:12:26 - Adcionado na Lista Array midas.dll path no windows: C:\Instaladores\Delphi\1. Delphi7\2.0 Updates\delphi_7.1_database_supplemental\delphi_7.1_database_supplemental\delphi7\windows\system32\midas.dll
+12/05/2021 15:12:27 - Adcionado na Lista Array midas.dll path no windows: C:\Instaladores\Delphi\1. Delphi7\Install\System32\midas.dll
+12/05/2021 15:12:29 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\bin\midas.dll
+12/05/2021 15:12:29 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\bin64\midas.dll
+12/05/2021 15:12:29 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\Redist\win32\midas.dll
+12/05/2021 15:12:29 - Adcionado na Lista Array midas.dll path no windows: C:\Program Files (x86)\Embarcadero\Studio\20.0\Redist\win64\midas.dll
+12/05/2021 15:12:54 - Adcionado na Lista Array midas.dll path no windows: C:\Windows\System32\midas.dll
+12/05/2021 15:12:54 - Adcionado na Lista Array midas.dll path no windows: C:\Windows\SysWOW64\midas.dll

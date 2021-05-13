@@ -77,12 +77,13 @@ object Form1: TForm1
     TabOrder = 6
   end
   object Button7: TButton
-    Left = 352
-    Top = 400
+    Left = 488
+    Top = 336
     Width = 75
     Height = 25
     Caption = 'Button7'
     TabOrder = 7
+    OnClick = Button7Click
   end
   object Memo2: TMemo
     Left = 688
@@ -101,5 +102,28 @@ object Form1: TForm1
     Caption = 'listar midas.dll (rotina MELHOR)'
     TabOrder = 9
     OnClick = Button8Click
+  end
+  object Memo3: TMemo
+    Left = 688
+    Top = 368
+    Width = 361
+    Height = 161
+    TabOrder = 10
+  end
+  object ProgressBar1: TProgressBar
+    Left = 688
+    Top = 80
+    Width = 361
+    Height = 17
+    TabOrder = 11
+  end
+  object Button9: TButton
+    Left = 312
+    Top = 352
+    Width = 75
+    Height = 25
+    Caption = 'Button9'
+    TabOrder = 12
+    OnClick = Button9Click
   end
 end

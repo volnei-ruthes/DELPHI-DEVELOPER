@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ShellAPI, Vcl.ComCtrls;
+  Dialogs, StdCtrls, ShellAPI, Vcl.ComCtrls, Math;
 
 type
 
@@ -19,6 +19,9 @@ type
     Button7: TButton;
     Memo2: TMemo;
     Button8: TButton;
+    Memo3: TMemo;
+    ProgressBar1: TProgressBar;
+    Button9: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -26,20 +29,38 @@ type
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
   private
     { Private declarations }
     Procedure ResourcesExtractToSaveDLLs(const NomeResource, NomeArquivo: String);
     procedure SetArquivoInfoDlls(pNameArquivo, pArqDll: String);
     Procedure ResourcesExtractToReadInfoDLLs(const NomeResource, NomeArquivo: String);
-    function BuscaMidasDLL(const cPath, cFile: String) : boolean;
+    function  BuscaMidasDLL(const cPath, cFile: String) : boolean;
     procedure ListarArquivos(pDiretorio: string; pSub:Boolean);
+    function FileSize(fileName : wideString) : Int64;
+    function ConvertBytes(Bytes: Int64): string;
+    procedure mudaAlgo(var texto:string);
+    procedure ShowDllPath stdcall;
+    function GetModuleName: string;
   public
     { Public declarations }
 
   end;
 
+  TPathMidas = record
+    fullPath : string;
+    path     : string;
+    size     : string;
+  end;
+
 var
   Form1: TForm1;
+  indexArray : integer;
+  ListaArrayPathMidasDLL : array[0..50] of TPathMidas;
+  contBar : integer;
+
+
 implementation
 
 {$R *.dfm}
@@ -74,6 +95,7 @@ var
   S: String;
   nRet: Integer;
   Search: TSearchRec;
+  TamanhoArquivo : Int64;
 begin
   nRet := FindFirst(cPath+'*.*', faAnyFile or faArchive or faDirectory, Search);
   while nRet = 0 do
@@ -86,7 +108,8 @@ begin
       { Neste caso estamos fazendo uma busca exata, pode-se fazer um if com pos
         para buscar extensões partes do nome e etc. }
       end else if Trim(Search.Name) = cFile then begin
-        Memo1.Lines.Add(cPath+Search.Name);
+        TamanhoArquivo := FileSize(cPath+Search.Name);
+        Memo1.Lines.Add(cPath+Search.Name+' - '+ConvertBytes(TamanhoArquivo));
       end;
     end;
     nRet := FindNext(Search);
@@ -98,16 +121,96 @@ begin
   BuscaMidasDLL('C:\Windows\', 'midas.dll');
 end;
 
+procedure TForm1.ShowDllPath;
+var
+  TheFileName : array[0..MAX_PATH] of char;
+begin
+ {Detecting DLL Filename - How to detect the full path and file name of where the DLL was called from.}
+ FillChar(TheFileName, sizeof(TheFileName), #0);
+ GetModuleFileName(hInstance, TheFileName, sizeof(TheFileName));
+ MessageBox(0, TheFileName, 'The DLL file name is:', mb_ok);
+end;
+
+
+procedure TForm1.Button7Click(Sender: TObject);
+begin
+ ShowDllPath;
+ showmessage(GetModuleName);
+end;
+
 procedure TForm1.Button8Click(Sender: TObject);
+var i: integer;
 begin
  memo2.Lines.Clear;
- ListarArquivos('C:\', true);
+ indexArray := 0;
+ ProgressBar1.Position := 0;
+ ListarArquivos('C:', true);
+ for i := Low(ListaArrayPathMidasDLL) to High(ListaArrayPathMidasDLL) do begin
+   if trim(ListaArrayPathMidasDLL[i].fullPath) <> '' then begin
+     memo3.Lines.Add(inttostr(i)+' - '+ListaArrayPathMidasDLL[i].path);
+     memo3.Lines.Add(inttostr(i)+' - '+ListaArrayPathMidasDLL[i].fullPath);
+   end;
+ end;
+ ProgressBar1.Position := ProgressBar1.Position + (100 - ProgressBar1.Position);
 end;
+
+function TForm1.GetModuleName: string;
+var
+  szFileName: array[0..MAX_PATH] of Char;
+begin
+  FillChar(szFileName, SizeOf(szFileName), #0);
+  GetModuleFileName(hInstance, szFileName, MAX_PATH);
+  Result := szFileName;
+end;
+
+
+procedure TForm1.Button9Click(Sender: TObject);
+ var texto, texto2:string;
+begin
+  texto := 'A';
+  showmessage('valor da var texto: '+ texto);
+  mudaAlgo(texto);
+  showmessage('valor da var texto: '+ texto);
+end;
+
+procedure TForm1.mudaAlgo(var texto: string);
+begin
+ texto := texto+'1';
+ showmessage('mensagem dentro do metodo: '+texto);
+end;
+
+function TForm1.ConvertBytes(Bytes: Int64): string;
+const
+  Description: Array [0 .. 8] of string = ('Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+var
+  i: Integer;
+begin
+  i := 0;
+  while Bytes > Power(1024, i + 1) do begin
+    Inc(i);
+  end;
+  Result := FormatFloat('###0.##', Bytes / IntPower(1024, i)) + ' ' + Description[i];
+end;
+
+function TForm1.FileSize(fileName: wideString): Int64;                          // returns file size in bytes or -1 if not found.
+var sr : TSearchRec;
+begin
+  if FindFirst(fileName, faAnyFile, sr ) = 0 then begin
+    result := Int64(sr.FindData.nFileSizeHigh) shl Int64(32) + Int64(sr.FindData.nFileSizeLow)
+  end else begin
+    result := -1;
+  end;
+  FindClose(sr);
+end;
+
+
+
 
 procedure TForm1.ListarArquivos(pDiretorio: string; pSub:Boolean);
 var F: TSearchRec;
     Ret: Integer;
     TempNome: string;
+    TamanhoArquivo : Int64;
 
         function TemAtributo(Attr, Val: Integer): Boolean;
         begin
@@ -126,7 +229,12 @@ begin
           end;
         end;
       end else if Trim(F.Name) = 'midas.dll' then begin
-        memo2.Lines.Add(pDiretorio+'\'+F.Name);
+        TamanhoArquivo := FileSize(pDiretorio+'\'+F.Name);  //pega o tamanho do arquivo em bytes
+        memo2.Lines.Add('Caminho: '+pDiretorio+'\'+F.Name+ ' - Tamanho: ' + ConvertBytes(TamanhoArquivo) );  //converte bytes para kb ou mb, ou gb.
+        ListaArrayPathMidasDLL[indexArray].fullPath := pDiretorio+'\'+F.Name;
+        //ListaArrayPathMidasDLL[indexArray].path := pDiretorio+'\';
+        inc(indexArray);
+        ProgressBar1.Position := indexArray;
       end;
       Ret := FindNext(F);
     end;
@@ -134,6 +242,8 @@ begin
     FindClose(F);
   end;
 end;
+
+
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -176,6 +286,7 @@ begin
    Writeln(f,pArqDll, ',', DateTimeToStr(FileDateToDateTime(FileLastModificationDate)) ); //escreve no arquivo e desce uma linha    Write(f,'Clube Delphi'); //escreve no arquivo sem descer a linha
    Closefile(f); //fecha o handle de arquivo
 end;
+
 
 procedure TForm1.Button2Click(Sender: TObject);
 var
