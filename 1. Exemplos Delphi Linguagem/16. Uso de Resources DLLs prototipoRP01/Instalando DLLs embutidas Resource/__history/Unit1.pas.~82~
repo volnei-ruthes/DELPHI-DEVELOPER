@@ -30,6 +30,7 @@ type
     procedure Button6Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
   private
     { Private declarations }
     Procedure ResourcesExtractToSaveDLLs(const NomeResource, NomeArquivo: String);
@@ -39,7 +40,9 @@ type
     procedure ListarArquivos(pDiretorio: string; pSub:Boolean);
     function FileSize(fileName : wideString) : Int64;
     function ConvertBytes(Bytes: Int64): string;
-    procedure imprime(pTexto:string);
+    procedure mudaAlgo(var texto:string);
+    procedure ShowDllPath stdcall;
+    function GetModuleName: string;
   public
     { Public declarations }
 
@@ -56,7 +59,7 @@ var
   indexArray : integer;
   ListaArrayPathMidasDLL : array[0..50] of TPathMidas;
   contBar : integer;
-  texto:string;
+
 
 implementation
 
@@ -118,9 +121,21 @@ begin
   BuscaMidasDLL('C:\Windows\', 'midas.dll');
 end;
 
+procedure TForm1.ShowDllPath;
+var
+  TheFileName : array[0..MAX_PATH] of char;
+begin
+ {Detecting DLL Filename - How to detect the full path and file name of where the DLL was called from.}
+ FillChar(TheFileName, sizeof(TheFileName), #0);
+ GetModuleFileName(hInstance, TheFileName, sizeof(TheFileName));
+ MessageBox(0, TheFileName, 'The DLL file name is:', mb_ok);
+end;
+
+
 procedure TForm1.Button7Click(Sender: TObject);
 begin
- ProgressBar1.Position := 100;
+ ShowDllPath;
+ showmessage(GetModuleName);
 end;
 
 procedure TForm1.Button8Click(Sender: TObject);
@@ -139,7 +154,30 @@ begin
  ProgressBar1.Position := ProgressBar1.Position + (100 - ProgressBar1.Position);
 end;
 
+function TForm1.GetModuleName: string;
+var
+  szFileName: array[0..MAX_PATH] of Char;
+begin
+  FillChar(szFileName, SizeOf(szFileName), #0);
+  GetModuleFileName(hInstance, szFileName, MAX_PATH);
+  Result := szFileName;
+end;
 
+
+procedure TForm1.Button9Click(Sender: TObject);
+ var texto, texto2:string;
+begin
+  texto := 'A';
+  showmessage('valor da var texto: '+ texto);
+  mudaAlgo(texto);
+  showmessage('valor da var texto: '+ texto);
+end;
+
+procedure TForm1.mudaAlgo(var texto: string);
+begin
+ texto := texto+'1';
+ showmessage('mensagem dentro do metodo: '+texto);
+end;
 
 function TForm1.ConvertBytes(Bytes: Int64): string;
 const
@@ -164,6 +202,8 @@ begin
   end;
   FindClose(sr);
 end;
+
+
 
 
 procedure TForm1.ListarArquivos(pDiretorio: string; pSub:Boolean);
@@ -202,6 +242,8 @@ begin
     FindClose(F);
   end;
 end;
+
+
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -244,6 +286,7 @@ begin
    Writeln(f,pArqDll, ',', DateTimeToStr(FileDateToDateTime(FileLastModificationDate)) ); //escreve no arquivo e desce uma linha    Write(f,'Clube Delphi'); //escreve no arquivo sem descer a linha
    Closefile(f); //fecha o handle de arquivo
 end;
+
 
 procedure TForm1.Button2Click(Sender: TObject);
 var

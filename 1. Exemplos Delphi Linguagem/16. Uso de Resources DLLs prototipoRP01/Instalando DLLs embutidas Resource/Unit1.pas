@@ -165,7 +165,7 @@ end;
 
 
 procedure TForm1.Button9Click(Sender: TObject);
- var texto, texto2:string;
+ var texto: string;
 begin
   texto := 'A';
   showmessage('valor da var texto: '+ texto);
