@@ -22,6 +22,9 @@ type
     Memo3: TMemo;
     ProgressBar1: TProgressBar;
     Button9: TButton;
+    Button10: TButton;
+    Button11: TButton;
+    Button12: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -31,6 +34,8 @@ type
     procedure Button8Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure Button12Click(Sender: TObject);
   private
     { Private declarations }
     Procedure ResourcesExtractToSaveDLLs(const NomeResource, NomeArquivo: String);
@@ -121,16 +126,72 @@ begin
   BuscaMidasDLL('C:\Windows\', 'midas.dll');
 end;
 
+
+
+
+
+
+
+
+
+ //testes registro midas.dll....
 procedure TForm1.ShowDllPath;
 var
   TheFileName : array[0..MAX_PATH] of char;
 begin
- {Detecting DLL Filename - How to detect the full path and file name of where the DLL was called from.}
  FillChar(TheFileName, sizeof(TheFileName), #0);
  GetModuleFileName(hInstance, TheFileName, sizeof(TheFileName));
  MessageBox(0, TheFileName, 'The DLL file name is:', mb_ok);
 end;
 
+procedure TForm1.Button10Click(Sender: TObject);
+Var
+  Dll :THandle;
+  TheFileName : array[0..MAX_PATH] of char;
+begin
+   {----verificar o caminho da dll que esta registrado no windows
+
+  1. MEUHANDLE := loadlibrary(dllmidas);
+
+  2. GetModuleFileName( MEUHANDLE, TheFileName, sizeof(TheFileName));
+
+  3. com este caminho do loadlibrary e do GETmoduleFileName faço copia midas.dll da RP.  }
+
+  FillChar(TheFileName, sizeof(TheFileName), #0);
+  Dll := LoadLibrary('midas.dll');
+  GetModuleFileName(Dll, TheFileName, sizeof(TheFileName));
+  MessageBox(0, TheFileName, 'The DLL file name is:', mb_ok);
+//
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+procedure TForm1.Button12Click(Sender: TObject);
+begin
+
+  ShowMessage( FormatDateTime('ddMMyy',now)+FormatDateTime('hhnns',now));
+
+
+end;
 
 procedure TForm1.Button7Click(Sender: TObject);
 begin
@@ -242,6 +303,8 @@ begin
     FindClose(F);
   end;
 end;
+
+
 
 
 

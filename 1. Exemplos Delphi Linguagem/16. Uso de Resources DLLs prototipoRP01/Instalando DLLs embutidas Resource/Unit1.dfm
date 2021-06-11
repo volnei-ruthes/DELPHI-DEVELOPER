@@ -126,4 +126,30 @@ object Form1: TForm1
     TabOrder = 12
     OnClick = Button9Click
   end
+  object Button10: TButton
+    Left = 264
+    Top = 512
+    Width = 241
+    Height = 41
+    Caption = 'caminho midas registrada windows'
+    TabOrder = 13
+    OnClick = Button10Click
+  end
+  object Button11: TButton
+    Left = 264
+    Top = 583
+    Width = 241
+    Height = 25
+    Caption = 'Button11'
+    TabOrder = 14
+  end
+  object Button12: TButton
+    Left = 832
+    Top = 590
+    Width = 75
+    Height = 25
+    Caption = 'Button12'
+    TabOrder = 15
+    OnClick = Button12Click
+  end
 end
