@@ -121,4 +121,67 @@ object Form1: TForm1
     TabOrder = 11
     OnClick = Button12Click
   end
+  object Button13: TButton
+    Left = 8
+    Top = 388
+    Width = 249
+    Height = 25
+    Caption = '13. copiar parte de uma string'
+    TabOrder = 12
+    OnClick = Button13Click
+  end
+  object Button14: TButton
+    Left = 8
+    Top = 419
+    Width = 249
+    Height = 25
+    Caption = '14. substituir caracteres dentro de uma string'
+    TabOrder = 13
+    OnClick = Button14Click
+  end
+  object Button15: TButton
+    Left = 8
+    Top = 450
+    Width = 249
+    Height = 25
+    Caption = '15. duplicar ou replicar uma string'
+    TabOrder = 14
+    OnClick = Button15Click
+  end
+  object Button16: TButton
+    Left = 8
+    Top = 481
+    Width = 249
+    Height = 25
+    Caption = '16. formatar Strings.'
+    TabOrder = 15
+    OnClick = Button16Click
+  end
+  object Button17: TButton
+    Left = 8
+    Top = 512
+    Width = 249
+    Height = 25
+    Caption = '17. retirar as quebras de linha de uma String'
+    TabOrder = 16
+    OnClick = Button17Click
+  end
+  object Button18: TButton
+    Left = 8
+    Top = 543
+    Width = 249
+    Height = 25
+    Caption = '18. posi'#231#227'o de um car'#225'cter dentro de uma string'
+    TabOrder = 17
+    OnClick = Button18Click
+  end
+  object Button19: TButton
+    Left = 8
+    Top = 574
+    Width = 249
+    Height = 25
+    Caption = '19. desabilitar mensagens warnings do compilador'
+    TabOrder = 18
+    OnClick = Button19Click
+  end
 end

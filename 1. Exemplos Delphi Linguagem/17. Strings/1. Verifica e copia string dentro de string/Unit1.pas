@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, StrUtils, TypInfo;
 
-
+type
+  TLocal = (lcLeft, lcRight, lcCenter);
 
 type
   TForm1 = class(TForm)
@@ -22,6 +23,13 @@ type
     Button10: TButton;
     Button11: TButton;
     Button12: TButton;
+    Button13: TButton;
+    Button14: TButton;
+    Button15: TButton;
+    Button16: TButton;
+    Button17: TButton;
+    Button18: TButton;
+    Button19: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -34,6 +42,13 @@ type
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure Button12Click(Sender: TObject);
+    procedure Button13Click(Sender: TObject);
+    procedure Button14Click(Sender: TObject);
+    procedure Button15Click(Sender: TObject);
+    procedure Button16Click(Sender: TObject);
+    procedure Button17Click(Sender: TObject);
+    procedure Button18Click(Sender: TObject);
+    procedure Button19Click(Sender: TObject);
   private
     { Private declarations }
     function GetNewID(Prefix: String): string;                                  //Função para gerar um ID único em String.
@@ -41,7 +56,7 @@ type
     function CountPos(const subtext: string; Text: string): Integer;            //7. CONTA Nº VEZES DE UM TEXTO DENTRO DE UMA STRING.
     function RemoveAcento1(aText : string) : string;                            //8. Função para remover acentos de uma string.
     function RemoveAcento2(const pText: string): string;                        //8. Função para remover acentos de uma string.
-
+    function StrFormat(AText, Caracter: String; Size: Word; Local: TLocal): String;
 
 
   public
@@ -96,6 +111,133 @@ begin
   // trocando a extensão para pdf
   vMeuArquivo := ChangeFileExt(vMeuArquivo, '.pdf');
   ShowMessage(vMeuArquivo);
+end;
+
+procedure TForm1.Button13Click(Sender: TObject);  //13. copiar parte de uma string
+begin
+  // irá aparecer ext
+  ShowMessage(Copy('texto', 2, 3));
+
+  // irá aparecer Show
+  ShowMessage(Copy('Show Delphi', 1, 4));
+
+  // irá aparecer Studio
+  ShowMessage(Copy('Rad Studio XE 7', 4, 7));
+end;
+
+procedure TForm1.Button14Click(Sender: TObject); //14. substituir caracteres dentro de uma string
+begin
+   {O Delphi dispõe de muitas funções que agilizam o nosso trabalho.
+    Nesta dica vamos dar destaque a uma função utilizada para
+    substituir textos. Ela conta com várias opções e seu uso é
+    muito fácil.
+
+    É necessário estar declarado SysUtils na seção uses,
+    em versões unicode declare System.SysUtils.
+
+    Função do Delphi:
+    StringReplace(texto, texto velho, texto novo, opções);}
+
+  // Substitui todos caracteres de mesma caixa (no caso minuscula)
+  ShowMessage(StringReplace('abAcate', 'a', '@', [rfReplaceAll]));
+
+  // Substitui todos caracteres ignorando a caixa(no caso maíuscula)
+  ShowMessage(StringReplace('abAcate', 'a', '@', [rfIgnoreCase, rfReplaceAll]));
+
+  // Substitui o primeiro caracter de mesma caixa
+  ShowMessage(StringReplace('abAcate', 'a', '@', []));
+end;
+
+procedure TForm1.Button15Click(Sender: TObject); //15. duplicar ou replicar uma string
+begin
+
+  {É necessário estar declarado StrUtils na seção uses,
+em versões unicode declare System.StrUtils.
+
+Funçao do Delphi: DupeString(texto, nº de repetições);
+
+Para o exemplo também é necessário estar declarado SysUtils na seção uses,
+em versões unicode declare System.SysUtils.}
+
+ // Replicando a String três veses
+  ShowMessage(DupeString('texto', 3));
+
+  // Duplicando a String
+  ShowMessage(DupeString('show delphi', 2));
+
+  // Replicando a String dez veses
+  ShowMessage(DupeString('| Delphi XE 7 |', 10));
+
+end;
+
+procedure TForm1.Button16Click(Sender: TObject); //16. formatar Strings.
+var
+  s : String;
+begin
+  // String de 8 caracteres com zeros a esquerda.
+  s := StrFormat('15', '0', 8, lcLeft);
+  ShowMessage(s);
+
+  // String de 14 caracteres completando com espaços a direita.
+  s := StrFormat('01253696312', ' ', 14, lcRight);
+  ShowMessage(s + '|');
+
+  { Criando uma string de 30 caracteres complentado se necessário
+  com espaços a direita e a esquerda, criando um efeito de centralização. }
+  s := StrFormat('teste', ' ', 30, lcCenter);
+  ShowMessage('|' + s + '|');
+end;
+
+procedure TForm1.Button17Click(Sender: TObject); //17. retirar as quebras de linha de uma String
+
+    // É necessário estar declarado SysUtils na seção uses.
+    // Em versões unicode declare System.SysUtils.
+
+    function RetiraEnter(aText : string): string;
+    begin
+      { Retirando as quebras de linha em campos blob }
+      Result := StringReplace(aText, #$D#$A, '', [rfReplaceAll]);
+
+      { Retirando as quebras de linha em campos blob }
+      Result := StringReplace(Result, #13#10, '', [rfReplaceAll]);
+    end;
+
+begin
+  //Edit1.Text := Qry.FieldByName('OBS').AsString;
+end;
+
+procedure TForm1.Button18Click(Sender: TObject);  //18. posição de um carácter dentro de uma string
+begin
+  ShowMessage('O "x" esta na posição ' + IntToStr(Pos('x', 'texto')));
+
+  ShowMessage('O "i" esta na posição ' + IntToStr(Pos('i', 'Delphi XE 7')));
+
+  ShowMessage('O "D" esta na posição ' + IntToStr(Pos('D', 'Show Delphi')));
+
+  // Caso o caracter não exista, a função retorna 0
+  ShowMessage('O "W" esta na posição ' + IntToStr(Pos('W', 'Comunidade')));
+
+end;
+
+procedure TForm1.Button19Click(Sender: TObject);
+var
+  Teste : AnsiString;
+begin
+  {Como desabilitar mensagens warnings do compilador?
+    Ao fazer a compilação de algum código, o compilador pode nos dar
+    três tipos de mensagens:
+
+    Hints: Código sem utilização (Que pode ser removido)
+    Warnings: Atenção. O código compila, mas pode ocorrer algum problema na aplicação.
+    Error: Erro no código, não é possível gerar o executável.
+
+    Certo, só a casos que temos certeza que não irá haver problemas, mas há mensagem
+    Warnings aparecendo. Como remove-las?}
+
+    {$WARNINGS OFF}  // desliga os alertas
+      Teste := Copy('Show Delphi', 1, 4);
+    {$WARNINGS ON}  // liga os alertas
+
 end;
 
 //1. VERIFICA UMA STRING E RETORNA A MESMA.
@@ -337,6 +479,24 @@ begin
   Result := string(USAscii20127(pText));
 end;
 
+function TForm1.StrFormat(AText, Caracter: String; Size: Word;  Local: TLocal): String;
+var
+  X: Integer;
+begin
+  Result := Copy(AText, 1, Size);
+  for X := Length( AText ) to Size - 1 do
+  begin
+    case Local of
+      lcLeft: Result := Caracter + Result;
+      lcRight: Result := Result + Caracter;
+      lcCenter: if (X mod 2) = 0 then
+                  Result := Result + Caracter
+                else
+                  Result := Caracter + Result;
+    end;
+  end;
+end;
+
 end.
 
 
@@ -355,6 +515,15 @@ end.
 10. Reverse String
 11. converter os caracteres de uma string para maiúsculo
 12. Trocar extesão de arquivo
+13. copiar parte de uma string
+14. substituir caracteres dentro de uma string
+15. duplicar ou replicar uma string
+16. formatar Strings.
+17. retirar as quebras de linha de uma String
+18. posição de um carácter dentro de uma string
+19. desabilitar mensagens warnings do compilador
+
+
 
 
 
