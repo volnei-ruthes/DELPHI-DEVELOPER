@@ -1,0 +1,125 @@
+procedure TForm1.Button1Click(Sender: TObject);
+var
+   date1, date2, date3, date4 : TDateTime;       // TDateTime variables in System.unit
+begin
+ //Obs. Para esse recurso usar a biblioteca SysUtil and DateUtils in USES.
+ date4 := Now;            // Set to the current day and time
+ date2 := Date;           // Set to the start of the current day
+ date1 := Yesterday;      // Set to the start of yesterday
+ date3 := Tomorrow;       // Set to the start of tomorrow
+ showmessage(DateTimeToStr(date4));
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+var
+   myDate : TDateTime;
+   day, month, year    : string;
+begin
+   myDate := now;    //USANDO BIBLIOTECA SYSUTILs.
+   myDate := StrToDate('30/05/2000');   //DATA CONVERTENDO DE UMA STRING
+   ShowMessage('c = '+FormatDateTime('c', myDate));
+   myDate := StrToDateTime('29/02/2000 10:05:15.20');  //DATA E HORA CONVERTENDO DE UMA STRING
+   ShowMessage('c = '+FormatDateTime('c', myDate));
+
+   //myDate := EncodeDate(2002, 12, 31); //Seta uma data qualquer para exemplo.
+   //myDate := EncodeDateTime(2022, 11, 17, 5, 6, 7, 8);  //Exemplo para Codificar uma DATA e HORA de numeros para variavel DateTime. Parâmetros: (Ano,Mes,Dia, Hora, Min, Segundo, Milesimo).
+
+
+   // 1. Apenas a DATA.
+   ShowMessage('Exemplo 1 Padrão d/m/y = '+ FormatDateTime('d/m/y', myDate));
+                         // OU
+   ShowMessage('Exemplo 1 Padrão dd/mm/yy = '+ FormatDateTime('dd/mm/yy', myDate));
+
+   //2. Padrão com textos - ex. Wed 9 of Feb 2000
+   ShowMessage('Exemplo 2 ddd d of mmm yyyy = '+ FormatDateTime('ddd d of mmm yyyy', myDate));
+                        // OU
+   // 3. Padrão com textos - ex. Wednesday 9 of February 2000
+   ShowMessage('Exemplo 3 dddd d of mmmm yyyy = '+ FormatDateTime('dddd d of mmmm yyyy', myDate));
+
+   // 4. Data curta - ex. 09/02/2000
+   ShowMessage('Exemplo 4 ddddd = '+ FormatDateTime('ddddd', myDate));
+   // 5. Texto curto 09 February 2000
+   ShowMessage('Exemplo 5 dddddd = '+ FormatDateTime('dddddd', myDate));
+
+   // 6. Apenas Horas: ex. h:n:s.z = 5:6:7.008
+   ShowMessage('Exemplo 6 h:n:s.z = '+ FormatDateTime('h:n:s.z', myDate));
+
+   // 7. Apenas Horas: ex. hh:nn:ss.zzz = 05:06:07.008
+   ShowMessage('Exemplo 7 hh:nn:ss.zzz = '+ FormatDateTime('hh:nn:ss.zzz', myDate));
+   // 8. Apenas Horas curtas ex.  t = 05:06
+   ShowMessage('Exemplo 8 t = '+FormatDateTime('t', myDate));
+   // 9. Apenas Horas normais ex. tt = 05:06:07
+   ShowMessage('Exemplo 9 tt = '+FormatDateTime('tt', myDate));
+   // 10. Completa Ex.  c = 09/02/2000 05:06:07
+   ShowMessage('Exemplo 10 c = '+FormatDateTime('c', myDate));
+
+   { *EXPLICAÇÃO DO FORMATOS DEFINIDOS
+    yy 	= Year last 2 digits
+    yyyy 	= Year as 4 digits
+    m 	= Month number no-leading 0
+    mm 	= Month number as 2 digits
+    mmm 	= Month using ShortDayNames (Jan)
+    mmmm 	= Month using LongDayNames  (January)
+    d 	= Day number no-leading 0
+    dd 	= Day number as 2 digits
+    ddd 	= Day using ShortDayNames (Sun)
+    dddd 	= Day using LongDayNames  (Sunday)
+    }
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+var myDate : TDateTime;
+    myYear, myMonth, myDay : Word;
+begin
+      // Set up the myDate variable to have a December 2000 value
+      myDate := StrToDate('29/12/2000');
+      // And let us see what we get
+      DecodeDate(myDate, myYear, myMonth, myDay);
+      ShowMessage('myDate now = '+DateToStr(myDate));   //myDate now = 29/01/2001
+      ShowMessage('myDay      = '+IntToStr(myDay));     //myDay      = 29
+      ShowMessage('myMonth    = '+IntToStr(myMonth));   //myMonth    = 12
+      ShowMessage('myYear     = '+IntToStr(myYear));    //myYear     = 2000
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+var
+   myDate : TDateTime;
+   myYear, myMonth, myDay : Word;
+   myHour, myMin, mySec, myMilli : Word;
+
+begin
+  myDate := StrToDateTime('29/12/2000 12:45:12.00');
+  DecodeDateTime(myDate, myYear, myMonth, myDay,myHour, myMin, mySec, myMilli);
+      ShowMessage('myDate now = '+DateToStr(myDate)); //myDate now = 29/01/2001
+      ShowMessage('myHour     = '+IntToStr(myHour));  //myHour     = 12
+      ShowMessage('myMin      = '+IntToStr(myMin));   //myMin      = 45
+      ShowMessage('mySec      = '+IntToStr(mySec));   //mySec      = 12
+      ShowMessage('myMilli    = '+IntToStr(myMilli)); //myMilli    = 34
+      ShowMessage('myDay      = '+IntToStr(myDay));   //myDay      = 29
+      ShowMessage('myMonth    = '+IntToStr(myMonth)); //myMonth    = 12
+      ShowMessage('myYear     = '+IntToStr(myYear));  //myYear     = 2000
+
+end;
+
+procedure TForm1.Button5Click(Sender: TObject);
+var myDate : TDateTime;
+begin
+  myDate := EncodeDate(2000, 12, 30);
+  ShowMessage('myDate = '+DateToStr(myDate));   // myDate = 30/12/2000
+  // Add 10 days to this date
+  myDate := IncDay(myDate, 10);
+  ShowMessage('myDate + 10 days = '+DateToStr(myDate)); //myDate + 10 days = 09/01/2001
+  // Subtract 12 days from this date
+  myDate := IncDay(myDate, -12);
+  ShowMessage('myDate - 12 days = '+DateToStr(myDate)); //myDate - 12 days = 29/12/2000
+
+
+  myDate := EncodeDateTime(2000, 12, 31, 23, 0, 0, 0);
+  ShowMessage('myDate = '+DateTimeToStr(myDate));  //myDate = 31/12/2000 23:00:00
+  // Add 100 minutes to this date
+  myDate := IncMinute(myDate, 100);
+  ShowMessage('myDate + 100 minutes = '+DateTimeToStr(myDate)); //myDate + 100 minutes = 01/01/2001 00:40:00
+  // Subtract 40 minutes from this date
+  myDate := IncMinute(myDate, -40);
+  ShowMessage('myDate -  40 minutes = '+DateTimeToStr(myDate));  //myDate -  40 minutes = 01/01/2001
+end;

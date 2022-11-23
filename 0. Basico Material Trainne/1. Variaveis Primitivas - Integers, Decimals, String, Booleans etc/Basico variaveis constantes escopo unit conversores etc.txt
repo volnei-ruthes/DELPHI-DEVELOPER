@@ -1,0 +1,78 @@
+procedure TForm1.Button1Click(Sender: TObject);
+Const
+  MAX_LINES = 3;
+  CRUDE_PI  = 22/7;
+  HELLO     = 'Hello World';
+  LETTERS   = ['A'..'Z', 'a'..'z'];
+  DECISION  = True;
+
+var
+   // --- TIPOS PRIMITIVOS ---
+   // Integer types :
+   Int1 : Byte;     //                        0 to 255
+   Int2 : ShortInt; //                     -127 to 127
+   Int3 : Word;     //                        0 to 65,535
+   Int4 : SmallInt; //                  -32,768 to 32,767
+   Int5 : LongWord; //                        0 to 4,294,967,295
+   Int6 : Cardinal; //                        0 to 4,294,967,295
+   Int7 : LongInt;  //           -2,147,483,648 to 2,147,483,647
+   Int8 : Integer;  //           -2,147,483,648 to 2,147,483,647
+   Int9 : Int64;    // -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
+
+   // Decimal types :
+   Dec1 : Single;   //  7  significant digits, exponent   -38 to +38
+   Dec2 : Currency; // 50+ significant digits, fixed 4 decimal places
+   Dec3 : Double;   // 15  significant digits, exponent  -308 to +308
+   Dec4 : Extended; // 19  significant digits, exponent -4932 to +4932
+
+   // Text types :
+   Str1 : Char;        // Holds a single character, small alphabet
+   Str2 : WideChar;    // Holds a single character, International alphabet
+   Str3 : AnsiChar;    // Holds a single character, small alphabet
+   Str4 : ShortString; // Holds a string of up to 255 Char's
+   Str5 : String;      // Holds strings of Char's of any size desired
+   Str6 : AnsiString;  // Holds strings of AnsiChar's any size desired
+   Str7 : WideString;  // Holds strings of WideChar's of any size desired
+
+   // Booleans types:
+   IsAprovado : Boolean; //True or False (-1 or 0);
+
+   //Date Time Types:
+   Data : TDate;        //Only Date Ex. 10/12/2022
+   DataHora: TDateTime; //Date and Time Ex. 10/12/2022 12:15:30'
+
+   //Variant Type:
+   vVariant:variant;  //Similar JavaScript, Accept all of shit (Not recomended)
+begin
+  Int8:=100;
+  Dec2:=100.20;
+  Str5:='Ola mundo!';
+  vVariant:='100'; vVariant:=50.2;  vVariant:=True;
+  showmessage(inttostr(Int8));
+  showmessage(CurrToStr(Dec2));
+  showmessage(inttostr(Int8));
+end;
+
+principais tipos primitivos do Delphi:
+
+· Byte - (Tipo por valor) - Inteiro de 8 bits sem sinal (0 a 255).
+
+· Short - (Tipo por valor) - Inteiro de16 bits com sinal ( -32768 a 32767).
+
+· Integer - (Tipo por valor) - Inteiro de 32 bits com sinal (- 2147483648 a 2147483647).
+
+· Long - (Tipo por valor) - Inteiro de 64 bits com sinal (-9223372036854775808 a 9223372036854775807).
+
+· Single - (Tipo por valor) - Ponto flutuante 32 bits.
+
+· Double - (Tipo por valor) - Ponto Flutuante 64 bits.
+
+· Decimal - (Tipo por valor) - Ponto Flutuante decimal de 128 bits (1.0 x 10^ -28 a 7.9 x 10^ -28),
+
+· Boolean - (Tipo por valor) - Pode ter os valores True e False.
+
+· Char - (Tipo por valor) - Representa um único caractere unicode de 16 bits.
+
+· Date - (Tipo por valor) - Representa uma data ou hora.
+
+· String - (Tipo por referência) - Representa uma sequência de caracteres unicode.

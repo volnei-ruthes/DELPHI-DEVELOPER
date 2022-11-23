@@ -1,0 +1,62 @@
+
+
+
+
+
+2. ARRAYS Estáticos ou Dinâmicos
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  //Define static arrays - //Static arrays - These are defined with fixed, unchangeable sizes.
+  umArray  : Array[0..2] of string;
+  multiArray : Array[0..2, 0..2] of string;
+begin
+
+  //umArray (tripa de galinha)
+  umArray[0]:='texto qualquer 1';
+  umArray[1]:='texto qualquer 2';
+  ShowMessage('Tamanho Total: '+IntToStr(Length(umArray)));
+  ShowMessage('Inicio do Indice: '+IntToStr(Low(umArray)));
+  ShowMessage('Final do Indice: '+IntToStr(High(umArray)));
+  ShowMessage('Conteudo do Indice: '+umArray[0]);
+  //multiArray (Matriz)
+  multiArray[0][0]:='texto qualquer 1';
+  multiArray[0][1]:='texto qualquer 2';
+  ShowMessage('Conteudo da coluna 0 x 0: '+multiArray[0][0]);
+  ShowMessage('Conteudo da coluna 0 x 1: '+multiArray[0][1]);
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+var
+  umArray : array of string;
+  multiArray : array of array of string;
+begin
+  // ARRAY.
+  // Array - hold a indexable collections of data  (TIPO UNICO OU DIMENSIONAL(colxlin ver na web img de um exemplo).
+  // Description The Array keyword provides single and multi dimensional arrays (indexable sequences) of data.
+
+  // Delphi has three basic array types :
+  // 1.STATIC arrays; (These are defined with fixed, unchangeable sizes.) TAM. FIXO E IMUTÁVEL.
+  // 2.DYNAMICS arrays;
+
+  //Example unidimensional (tripa de galinha):
+  SetLength(umArray,2);
+  umArray[0] := 'array unidimensional no indice 0';
+  ShowMessage('Tamanho Total: '+inttostr(Length(umArray)));
+  ShowMessage('Inicio do Indice: '+inttostr(Low(umArray)));
+  ShowMessage('Final do Indice: '+inttostr(High(umArray)));
+  ShowMessage('Conteudo do Indice: '+umArray[0]);
+  //Example multidimensional (Matriz):
+  SetLength(multiArray,2,2);
+  multiArray[0][0]:= 'array multidimensional indice 0.0';
+  ShowMessage('Tamanho Total: '+inttostr(Length(multiArray)));
+  ShowMessage('Inicio do Indice: '+inttostr(Low(multiArray)));
+  ShowMessage('Final do Indice: '+inttostr(High(multiArray)));
+  ShowMessage('Conteudo do Indice: '+multiArray[0][0]);
+
+end;
+
+2.1 Exercicios:
+   2.1.1 - Fazer um Array estatico simples que armazena 5 frutas (tipo strings), alimentar o mesmo com dados e depois exibir o dado, e uma mensagem também com o tamanho desse array: 
+   2.1.2 - Fazer um Array estatico simples que armazena 3 notas (tipo double), alimentar e apresentar através de mensagem o dado e uma mensagem também com o tamanho desse array;
+   2.1.3 - Fazer um Array dinâmico simples que armazena 3 idades (tipo integer) alimentar com dados e depois exibir os dados e uma mensagem também com o tamanho do seu array.
+   2.1.4 - Fazer um array estatico matriz que armazena 3x3 dados sendo cada coluna com linha de 2 posições (nome e sobrenome), alimentar todo o array manulamente e depois exibir esses dados nome e sobrenome. 
