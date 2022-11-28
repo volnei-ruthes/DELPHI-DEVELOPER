@@ -55,6 +55,31 @@ begin
 
 end;
 
+procedure TForm1.btnCriaArquivoeEscreveClick(Sender: TObject);
+var
+  myFile : TextFile; //TEXTFILE - CRIANDO E ESCREVENDO UM ARQUIVO TXT 
+begin
+  AssignFile(myFile, 'C:\Test.txt');   //AssignFile - Esta instrução tem por finalidade Criar e associar um arquivo na mémoria e o nome lógico de arquivo ao arquivo físico
+  ReWrite(myFile);                     //ReWrite - Novo arquivo em disco com o nome é criado. Caso o arquivo a ser criado já exista, esta instrução apaga o arquivo para criá-lo novamente.
+  WriteLn(myFile, 'Hello');           //WriteLn - Add texto qualquer.
+  WriteLn(myFile, 'World');           //WriteLn - Add texto qualquer.
+  // Close the file
+  CloseFile(myFile);                  //CloseFile - Fecha o arquivo texto aberto na memória.
+end;
+
+procedure TForm1.btnReabreArquivoeEscreveClick(Sender: TObject);
+var
+  myFile : TextFile; //TEXTFILE - ABRINDO E ADD TEXTOS EM UM ARQUIVO TXT 
+begin
+  if not FileExists('C:\Test.txt') then begin
+    showmessage('Arquivo não localizado!'); exit;
+  end;
+  AssignFile(myFile, 'C:\Test.txt');   //AssignFile - Esta instrução tem por finalidade Criar e associar um arquivo na mémoria e o nome lógico de arquivo ao arquivo físico
+  Append(myFile);                      //Append -  Abre um arquivo texto existente para estendê-lo (dados adicionais).
+  WriteLn(myFile, 'Mais um texto adicionado!'); //WriteLn - Add texto qualquer.
+  CloseFile(myFile);      //CloseFile - Fecha o arquivo texto aberto na memória.
+end;
+
 2.1 Exercicios:
    2.1.1 - Fazer um Array estatico simples que armazena 5 frutas (tipo strings), alimentar o mesmo com dados e depois exibir o dado, e uma mensagem também com o tamanho desse array: 
    2.1.2 - Fazer um Array estatico simples que armazena 3 notas (tipo double), alimentar e apresentar através de mensagem o dado e uma mensagem também com o tamanho desse array;

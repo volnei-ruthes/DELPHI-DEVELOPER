@@ -1,0 +1,27 @@
+procedure TForm1.Button1Click(Sender: TObject);
+var i:integer;
+begin
+  //RESUMO DE EXEMPLO DO FOR - Lembre-se: No FOR o autoincremento do CONTADOR é automático!
+  for i:=0 to 3 do begin
+    {Bloco de codigos}
+    showmessage('Exemplo For - Numero do contador é: '+inttostr(i));
+  end;
+
+  //RESUMO DE EXEMPLO DO WHILE - Lembre-se: No WHILE o autoincremento do CONTADOR é manual!
+  i:=0;
+  while i<=3 do begin
+    {Bloco de codigos}
+    showmessage('Exemplo While - Numero do contador é: '+inttostr(i));
+    //Atenção! Não esqueça de incrementar seu contador no While, caso contrario, ficará em zero e em Loop (infinito)
+    i:=i+1; //ou: Inc(i);
+  end;
+
+  //RESUMO DE EXEMPLO DO REPEAT - Lembre-se: No WHILE o autoincremento do CONTADOR é manual!
+  i:=0;
+  Repeat
+    {Bloco de codigos}
+    showmessage('Exemplo Repeat - Numero do contador é: '+inttostr(i));
+    // Increment the number
+    Inc(i); //ou: i:=i+1;
+  until i>3;
+end;
