@@ -1,0 +1,43 @@
+procedure TForm1.Button1Click(Sender: TObject);
+var resultado:integer;
+begin
+   //Exemplo IF simples.
+   resultado:=1+1;
+   if (resultado=2) then begin
+     showmessage('O resultado é 2');
+   end else begin
+     showmessage('O resultado não é 2');
+   end;
+   //Exemplo IF com 2 condicionante da tabela verdade 'AND'.
+   resultado:=10;
+   if ((resultado >= 1) and (resultado <= 5)) then begin
+     showmessage('O resultado esta entre 1 e 5');
+   end else if ((resultado >= 5) and (resultado <= 8)) then begin
+     showmessage('O resultado esta entre 5 e 8');
+   end else if ((resultado >= 8) and (resultado <= 10)) then begin
+     showmessage('O resultado esta entre 8 e 10');
+   end;
+   //Exemplo IF com condicionante da tabela verdade 'OR'.
+   resultado:=10;
+   if (resultado > 100) or (resultado > 200)  or (resultado > 300) then begin
+     showmessage('certamente ta acima de 100');
+   end else begin
+     showmessage('certamente não ta acima de 100');
+   end;
+   //Exemplo IF com condicionante da tabela verdade 'NOT'.
+   resultado:=1;
+   if not(resultado = 10) then begin
+     showmessage('certamente o resultado não é 10');
+   end;
+   //Exemplo CASE
+   resultado:=3;
+   Case resultado of
+       1 : ShowMessage('O resultado é 1');  //Exemplo Linha simples.
+       2 : ShowMessage('O resultado é 2');  //Exemplo Linha simples.
+       3 : begin //Linha de bloco de código com begin end.
+            ShowMessage('O resultado é 3');
+            ShowMessage('O resultado é 3 mesmo!');
+           end;
+       else ShowMessage('O resultado é outro...');
+  end;
+end;
