@@ -1,0 +1,61 @@
+//1. Criando e add texto em um arquivo TextFile.
+procedure TForm1.Button2Click(Sender: TObject);
+var
+  MeuArquivoTexto : TextFile; //TEXTFILE - CRIANDO E ESCREVENDO UM ARQUIVO TXT
+begin
+  AssignFile(MeuArquivoTexto, 'C:\Teste.txt');  //AssignFile - Esta instrução vai criar um arquivo na mémoria e vai referenciar um local fisico.
+  ReWrite(MeuArquivoTexto);                     //ReWrite - Cria o arquivo físico e abre para escrita, porém, caso o arquivo já exista, esta instrução apaga o arquivo para criá-lo novamente.
+  WriteLn(MeuArquivoTexto, 'Hello');            //WriteLn - Add texto qualquer.
+  WriteLn(MeuArquivoTexto, 'World');            //WriteLn - Add texto qualquer.
+  CloseFile(MeuArquivoTexto);                   //CloseFile - Fecha o arquivo texto aberto na memória/físico.
+end;
+
+//2. Reabrindo o arquivo e add mais texto em um arquivo TextFile.
+procedure TForm1.Button3Click(Sender: TObject);
+var
+  MeuArquivoTexto : TextFile; //TEXTFILE - ABRINDO E ADD TEXTOS EM UM ARQUIVO TXT
+begin
+  if not FileExists('C:\Teste.txt') then begin
+    Showmessage('Arquivo não localizado! Sorry!');
+    Exit;
+  end;
+  AssignFile(MeuArquivoTexto, 'C:\Teste.txt');             //AssignFile - Esta instrução vai criar um arquivo na mémoria e vai referenciar um local fisico.
+  Append(MeuArquivoTexto);                                 //Append -  Abre um arquivo texto existente para implementar (dados adicionais).
+  WriteLn(MeuArquivoTexto, 'Mais um texto adicionado!');   //WriteLn - Add texto qualquer.
+  CloseFile(MeuArquivoTexto);                              //CloseFile - Fecha o arquivo texto aberto na memória.
+end;
+
+//3. Reabrindo o arquivo e lendo as informaçõs (textos) em um arquivo TextFile.
+procedure TForm1.Button4Click(Sender: TObject);
+var MeuArquivoTexto:TextFile;
+    LinhaTexto:String;
+begin
+  if not FileExists('C:\Teste.txt') then begin
+    Showmessage('Arquivo não localizado! Sorry!');
+    Exit;
+  end;
+  AssignFile(MeuArquivoTexto, 'C:\Teste.txt');      //AssignFile - Esta instrução vai criar um arquivo na mémoria e vai referenciar um local fisico.
+  FileMode := fmOpenRead;                           //Variável FileMode define o modo no qual o procedimento Reset abre um arquivo
+                                                    //fmOpenRead     	= 0 = Read only
+                                                    //fmOpenWrite 	    = 1 = Write only
+                                                    //fmOpenReadWrite 	= 2 = Read and write (default)
+  Reset(MeuArquivoTexto);                           //procedimento Reset abre um arquivo para acesso de leitura, gravação ou leitura e gravação.
+  while not Eof(MeuArquivoTexto) do                // While normal varrendo e mostrando o conteúdo de cada linha
+  begin
+    ReadLn(MeuArquivoTexto, LinhaTexto);
+    ShowMessage(LinhaTexto);
+  end;
+  CloseFile(MeuArquivoTexto);
+end;
+
+//4. Bônus, usando um StringList direto. 
+procedure TForm1.Button6Click(Sender: TObject);
+var  MinhaLista: TStringList;
+begin
+  MinhaLista := TStringList.Create;         //Crio.
+  MinhaLista.LoadFromFile('C:\Teste.txt');  //Carrego.
+  ShowMessage(MinhaLista[1]);               //Exemplo simples de ler/mostrar uma determinada linha. Poderia usar While ou For etc.
+                                            //Observação: Nesse caso estou lendo linha do índice ou posição ou endereço '1'
+                                            //(ou seja, a segunda linha, pois lembre-se que a estrutura seu índice começa com 0)
+  FreeAndNil(MinhaLista);                   //Libero.
+end;
