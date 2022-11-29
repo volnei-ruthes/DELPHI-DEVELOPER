@@ -1,0 +1,42 @@
+//1. Criando e escrevendo Arquivos Binários
+procedure TForm1.Button9Click(Sender: TObject);
+type
+  TPessoa = packed record
+    Nome: String[255];
+    Telefone: String[255];
+  end;
+var
+  Pessoa: TPessoa;
+  fPess: TFileStream;
+begin
+   if savedialog.Execute then // SaveDialog
+  begin
+    fPess := TFileStream.Create( savedialog.FileName, fmCreate );
+    Pessoa.Nome := 'mario jose de almeida';
+    Pessoa.Telefone := '46 998300552';
+    fPess.Write( Pessoa, SizeOf( TPessoa ) );
+    FreeAndNil( fPess );
+  end;
+end;
+
+//2. Lendo Arquivos Binários
+procedure TForm1.Button10Click(Sender: TObject);
+type
+  TPessoa = packed record
+    Nome: String[255];
+    Telefone: String[255];
+  end;
+var
+  Pessoa: TPessoa;
+  fPess: TFileStream;
+  CountRead: Integer;
+begin
+  if OpenDialog1.Execute then  // OpenDialog
+  begin
+    fPess := TFileStream.Create( OpenDialog1.FileName, fmOpenRead );
+    CountRead := fPess.Read( Pessoa, SizeOf( TPessoa ) );
+    if CountRead = 0 then Exit;
+    Showmessage('Nome: '+Pessoa.Nome+' - CPF: '+Pessoa.Telefone);
+    FreeAndNil( fPess );
+  end;
+end;
