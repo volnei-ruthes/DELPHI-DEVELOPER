@@ -1,0 +1,167 @@
+1. Criar um form principal e salvar numa pasta qualquer
+2. Criar uma unit e implementar a classe; 
+3. no form principal, dar uses na classe e usar a classe. 
+
+//CLASSE FRUTA
+
+unit u_ClasseFruta;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls; //Dei o uses nessas bibliotecas pq usei o showmessage
+
+type
+  //Class Fruit.
+  TFrutas = class
+  private
+    FNome: string;
+    FisRedonda: boolean;
+    FTamanho: single;
+    FDiametro: single;
+    FLargura: single;
+    procedure SetNome(const Value: string);
+    procedure SetDiametro(const Value: single);
+    procedure SetisRedonda(const Value: boolean);
+    procedure SetLargura(const Value: single);
+    procedure SetTamanho(const Value: single);
+  published
+    property Nome: string read FNome write SetNome;
+    property isRedonda: boolean read FisRedonda write SetisRedonda;
+    property Tamanho: single read FTamanho write SetTamanho;
+    property Largura: single read FLargura write SetLargura;
+    property Diametro: single read FDiametro write SetDiametro;
+   public
+    constructor Create(pNome:string;pDiametro:single); overload; //OVERLOAD significa sobrecarregado. é utiliado quando vc quer declarar mais de um método (procedimento ou função)
+                                                                 //         com o mesmo nome. então o que irá diferenciar a qual método vc está se referindo serão os parâmetros
+    constructor Create(pNome:string;pTamanho: single; pLargura:single); overload;
+
+    procedure ShowFruta;
+
+  end;
+
+implementation
+
+{ TFrutas }
+
+//CREATEs: (overload)
+constructor TFrutas.Create(pNome: string; pDiametro: single);
+begin
+  FNome:=pNome;
+  FisRedonda:= true;
+  FDiametro := pDiametro;
+end;
+
+constructor TFrutas.Create(pNome: string; pTamanho, pLargura: single);
+begin
+  FNome:=pNome;
+  FisRedonda:=false;
+  FTamanho:= pTamanho;
+  FLargura:= pLargura;
+end;
+//------------------------------------------------------
+
+//GETTER ou WRITE:
+
+procedure TFrutas.SetNome(const Value: string);
+begin
+  FNome:=Value;
+end;
+
+procedure TFrutas.SetDiametro(const Value: single);
+begin
+  FDiametro:=Value;
+end;
+
+procedure TFrutas.SetisRedonda(const Value: boolean);
+begin
+  FisRedonda:=Value;
+end;
+
+procedure TFrutas.SetLargura(const Value: single);
+begin
+  FLargura:=Value;
+end; 
+
+procedure TFrutas.SetTamanho(const Value: single);
+begin
+  FTamanho:=Value;
+end;
+//-----------------------------------------------------
+
+procedure TFrutas.ShowFruta;
+var redonda:string;
+begin
+  if isRedonda then redonda:='sim' else redonda:='não';
+
+  showmessage('Fruta: '+FNome+#13+
+              'É redonda? - '+redonda);
+end;
+
+end.
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// USANDO MEU FORM COM A CLASSE FRUTA CRIAADA
+--------------------------
+
+unit u_principal;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, u_ClasseFruta;    //DECLARO O USO DA MINHA CLASSE FRUTA AQUI
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+    procedure MostraFruta(pFruit:TFrutas);
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  maca, banana: TFrutas;
+begin
+  maca:= TFrutas.Create('maça',1.5);
+  banana:= TFrutas.Create('banana',7,1.75);
+
+  maca.ShowFruta;  //USO O METODO showfruta da propria classe fruta.
+
+  MostraFruta(maca); //USO METODO do meu proprio form. 
+  MostraFruta(banana);
+
+  maca.Free;
+  banana.Free;
+end;
+
+procedure TForm1.MostraFruta(pFruit: TFrutas);
+begin
+  if pFruit.isRedonda then
+    showmessage('Temos uma fruta '+pFruit.Nome+', redonda que é redonda com '+floattostr(pFruit.Diametro)+' de diametro.')
+   else
+    showmessage('Temos uma longa fruta '+pFruit.Nome+', que NÃO é redonda com '+floattostr(pFruit.Largura)+' de largura e '+#13+floattostr(pFruit.Tamanho)+' de tamanho.')
+end;
+
+end.
+
+

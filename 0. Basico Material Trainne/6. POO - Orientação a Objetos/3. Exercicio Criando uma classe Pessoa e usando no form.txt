@@ -1,0 +1,150 @@
+unit u_ClassePessoa;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls;
+
+type
+  TPessoa = class
+  private
+    FNome:string;
+    FCpf:string;
+    FIdade:integer;
+    FTamanho:double;
+    procedure SetNome(const Value:string);
+    procedure SetCpf(const Value:string);
+    procedure SetIdade(const Value:integer);
+    procedure SetTamanho(const Value:double);
+  published
+    property Nome:string read FNome write SetNome;
+    property CPF:string read FCpf write SetCpf;
+    property Idade:integer read FIdade write SetIdade;
+    property Tamanho:double read FTamanho write SetTamanho;
+  public
+    constructor Create(pNome:string; pCPF:string; pIdade:integer; pTamanho:double ); overload;
+    procedure MostrarPessoa;
+  end;
+
+implementation
+
+
+
+{ TPessoa }
+
+constructor TPessoa.Create(pNome, pCPF: string; pIdade: integer;  pTamanho: double);
+begin
+    FNome:=pNome;
+    FCpf:=pCPF;
+    FIdade:=pIdade;
+    FTamanho:=pTamanho;
+end;
+
+procedure TPessoa.MostrarPessoa;
+begin
+  Showmessage('Nome: '+FNome+', Idade: '+inttostr(FIdade));
+end;
+
+procedure TPessoa.SetCpf(const Value: string);
+begin
+  FCpf:=Value;
+end;
+
+procedure TPessoa.SetIdade(const Value: integer);
+begin
+  FIdade:=Value;
+end;
+
+procedure TPessoa.SetNome(const Value: string);
+begin
+  FNome:=Value;
+end;
+
+procedure TPessoa.SetTamanho(const Value: double);
+begin
+  FTamanho:=Value;
+end;
+
+end.
+
+
+1. Após criado a classe TFruta e usado no botão do form. Implementar uma Classe TPessoa:
+   1.1: essa classe tem que ter: nome, cpf, idade, tamanho. (criar seus campos, propriedade read/write);
+   1.2: além do create padrão, tem que ter um create que já inicie os dados por parâmetro;
+   1.3: criar um médodo da classe que mostra os dados nome e idade;
+   
+2. Exercicios da classe TPessoa:
+   2.1: Criar um botão no formulario que crie uma pessoa chamada joão, alimente suas propriedades e mostre seus dados. 
+        (usando o create primitivo ou seja sem passar parametros) 
+   2.2 Criar um botão no formulario que crie uma pessoa chamada Joana, e mostre seus dados. (usando o create de overload alimentando suas propriedades.) e usar o metodo para mostrar do propria classe. 
+
+3. Criar uma classe funcionario, que herde e acrescente salario. Na classe funcionario criar um metodo que mostre seus dados. 
+
+procedure TForm1.Button2Click(Sender: TObject);
+var
+  pessoa: TPessoa;
+begin
+  pessoa:= TPessoa.Create;
+  pessoa.Nome:='Joao';
+  pessoa.CPF:='123456';
+  pessoa.Idade:=18;
+  showmessage('Nome: '+pessoa.Nome);
+  pessoa.Free;
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+var
+  pessoa: TPessoa;
+begin
+  pessoa:= TPessoa.Create('Joana','222222',25,1.70);
+  pessoa.MostrarPessoa;
+  pessoa.Free;
+end;
+
+
+4. No formulario de teste, criar um funcionario, alimentar e mostrar  nome, cpf, idade, tamanho e o salario 
+
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+  private
+    { Private declarations }
+    procedure MostraFruta(pFruit:TFrutas);
+  public
+    { Public declarations }
+  end;
+
+  TFuncionario = class(TPessoa)
+  private
+    FSalario:double;
+    procedure SetSalario(const value:double);
+  published
+    property Salario:double read FSalario write SetSalario;
+  public
+  end;
+  
+ procedure TFuncionario.SetSalario(const value: double);
+begin
+  FSalario:=value;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+var
+  funcionario: TFuncionario;
+begin
+  funcionario:= TFuncionario.Create('Pedro','55555',40,1.80);
+  funcionario.SetSalario(1800);
+  showmessage('Nome: '+funcionario.Nome+', salario: '+floattostr(funcionario.Salario));
+  funcionario.Free;
+end;
+  
+  

@@ -1,0 +1,167 @@
+unit Unit1; //UNIT 1 PARA EXPLICAR ESPECIFICADORES DE ACESSO. 
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs;
+
+type //Estrutura exemplo:
+  TAlgumaCoisa = class
+  private    //Especificadores de acesso
+  published  //Especificadores de acesso
+  public     //Especificadores de acesso
+  end;
+
+{Especificadores de acesso:
+  PRIVATE = Métodos, variáveis, propriedades NÃO SERÃO acessíveis para todas as outras Units, Forms, e Descendentes dele
+            que estão fora da Unit onde ele está.  Mas Acessíveis para Outras Classes da mesma Unit. Usamos Private para  Métodos,
+            variáveis e propriedades que não queremos alterar fora da mesma unit, nem para seus descendentes que estão fora da Unit.
+
+  PUBLIC = Métodos, variáveis, propriedades SERÃO VISÍVEIS PARA TODAS as outras Units, Forms e Classes.
+           No Public você coloca os  Métodos, variáveis, propriedades que quer acessar dos outros formulários (Normalmente são variáveis que não influenciam no funcionamento da Sua classe).
+
+  PUBLISHED = Propriedades Publicadas na palheta de “Propersties” do seu Componente. Published, como o nome diz, Publicado. Serve para Publicar Propriedades na palheta de “properties” do seu componente.
+              As propriedades dele podem ser alteradas tanto em Runtime quanto em Tempo de Projeto. 
+			  A ideia é que no published eu cria um propriedade que faça o "meio de campo" com os famosos getter/setters (no delphi será por Read/Write) para ler/gravar informações nas variaveis não permitindo acesso direto. 
+
+  PROTECTED = Métodos, variáveis, propriedades NÃO SERÃO ACESSIVEIS para Outras Units, Forms. Mas é acessível para Outras Classes da Mesma Unit e para Classes que estão na mesma Unit OU
+             que os descendentes dele. No Protected é usado quando nossos  Métodos, variáveis e propriedades não podem ser modificados fora do próprio controle da Classe.
+             É largamente usado em Componentes onde que uma classe é feita APENAS para ser usada para este componente e seus descendentes. O Problema é que ele pode ser acessado por Outras classes
+             que estão na mesma Unit que seus descendentes.
+
+  Strict Protected =  (Delphi novo) Métodos, variáveis, propriedades não acessíveis para Outras Units, Forms e  Classes, exceto a classe seus descentesntes.
+
+  Strict Private =  (Delphi novo) Métodos, variáveis, propriedades não acessíveis para Outras Units, Forms, classes e Descendentes dele. E Strict Private é o mesmo que Private com a diferença de que
+                    não pode ser acessado por descendentes dentro da Mesma Unit.
+
+}
+
+type  //EXEMPLO 1. Definindo classe PAI com seus Especificadores de acesso. 
+  TFormPai = class(TForm)
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+    varPrivate:string;
+  public
+    { Public declarations }
+    varPublic:string;
+  protected
+   { protected declarations }
+    varProtected:string;
+  published
+   { published declarations }
+       property Propriedade:string read varProtected write varProtected;
+  end;
+
+  TFormHerdado = Class (TFormPai)  //Criar uma classe herdando na mesma unit.
+  public
+      procedure TestaEspecificadoresDeAcesso;
+  End;
+
+  TClasseTeste = class  //Criar outra classe na mesma unit do pai.
+  public
+      procedure  TestaEspecificadoresDeAcessoClasseTeste;
+  end;
+
+var
+  FormPai: TFormPai;
+
+implementation
+
+{$R *.dfm}
+
+{ TFormPai }
+
+procedure TFormPai.FormCreate(Sender: TObject);
+begin
+  varPrivate   :='';  //Não deu erro. Estou acessando o FormPai!
+  varPublic    :='';  //Não deu erro! Estou acessando o FormPai!
+  varProtected :='';  //Não deu erro! Estou acessando o FormPai!
+  Propriedade  :='';  //Não deu erro! Estou acessando o FormPai!
+end;
+
+{ TFormHerdado }
+
+procedure TFormHerdado.TestaEspecificadoresDeAcesso;
+begin
+  FormPai.varPrivate   :='';  //Não deu erro. Estou na mesma unit acessando o FormPai!
+  FormPai.varPublic    :='';  //Não deu erro! Estou na mesma unit acessando o FormPai!
+  FormPai.varProtected :='';  //Não deu erro! Estou na mesma unit acessando o FormPai!
+  FormPai.Propriedade  :='';  //Não deu erro! Estou na mesma unit acessando o FormPai!
+end;
+
+{ TClasseTeste }
+
+procedure TClasseTeste.TestaEspecificadoresDeAcessoClasseTeste;
+begin
+  FormPai.varPrivate   :='';  //Não deu erro. Estou na mesma unit acessando o FormPai!
+  FormPai.varPublic    :='';  //Não deu erro. Estou na mesma unit acessando o FormPai!
+  FormPai.varProtected :='';  //Não deu erro. Estou na mesma unit acessando o FormPai!
+  FormPai.Propriedade  :='';  //Não deu erro. Estou na mesma unit acessando o FormPai!
+end;
+
+end.
+
+--------------------------------------------------------------------------------------------------------------------------
+
+
+//UNIT 2 PARA TESTAR COM UNIT 1
+unit Unit2;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Unit1;   //DOU UM USES NA UNIT 1 AQUI.
+
+type
+  TForm2 = class(TForm)
+    procedure FormCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure TestaEspecificadoresDeAcesso;
+  end;
+
+   TFormHerdado = Class (TFormPai)
+   public
+     procedure TestaDeclaracoes;
+   End;
+
+var
+  Form2: TForm2;
+
+implementation
+
+{$R *.dfm}
+
+{ TForm2 }
+
+{ TForm2 }
+
+procedure TForm2.FormCreate(Sender: TObject);
+begin
+  //.
+end;
+
+procedure TForm2.TestaEspecificadoresDeAcesso;
+begin
+ //FormPai.varPrivate := '';    //Erro! Pois não consegue acessar a Declaração Private da Outra Unit (privado é somente na Unit lá).
+ //FormPai.varPublic := '';     //Não deu erro!
+ //FormPai.varProtected := '';  //Erro! Pois não consegue acessar a Declaração Protected da Outra Unit (NÃO são ACESSIVEIS para Outras Units, Forms. Somente acessível para Outras Classes DA MESMA Unit e para Classes que estão na mesma Unit)
+ //FormPai.Propriedade := '';   //Não deu erro!
+end;
+
+{ TFormHerdado }
+
+procedure TFormHerdado.TestaDeclaracoes;
+begin
+  //varPrivate := '';          //Deu erro, pois não consegue acessar a declaração Private do seu ancestral
+  varPublic := '';             //Não deu erro!
+  varProtected := '';          //Não deu erro! acessível para Outras Classes da Mesma Unit e para Classes que estão na mesma Unit OU que os descendentes dele
+  Propriedade := '';           //Não deu erro!
+end;
+
+end.
