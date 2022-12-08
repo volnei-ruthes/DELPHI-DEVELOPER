@@ -1,0 +1,181 @@
+1. Criando uma classe normal
+
+unit u_Cliente;
+
+interface
+
+Type
+    TCliente = class
+    private
+      FIDCliente: Integer;
+      FNome: String;
+      { private declarations }
+    protected
+      { protected declarations }
+    public
+      { public declarations }
+
+    published
+      { published declarations }
+      property IDCliente: Integer read FIDCliente write FIDCliente;
+      property Nome     : String  read FNome      write FNome;
+end;
+
+
+implementation
+
+end.
+
+
+------------------------------------------------------------------------
+
+2. criar uma classe lista para trabalhar a classe do item um cliente. 
+
+unit u_ListaCliente;
+
+interface
+
+uses Classes, u_Cliente, Dialogs; {Observe que aqui fizemos referencias as duas classes necessárias para fazer o Exemplo }
+
+Type
+  TListaCliente = class
+  private
+    { private declarations }
+    FListaClientes : TList;
+  protected
+    { protected declarations }
+  public
+    { public declarations }
+    constructor Create;
+    procedure Adicionar(pCliente: TCliente);
+    procedure Remover(Index: Integer);
+    function  Count: Integer;
+    procedure Mostrar(Index: Integer);
+  published
+    { published declarations }
+  end;
+
+implementation
+
+{ TListaCliente }
+
+procedure TListaCliente.Adicionar(pCliente: TCliente);
+begin
+   FListaClientes.Add(pCliente);
+end;
+
+function TListaCliente.Count: Integer;
+begin
+   Result := FListaClientes.Count;
+end;
+
+constructor TListaCliente.Create;
+begin
+  inherited Create;
+  FListaClientes := TList.Create;
+end;
+
+procedure TListaCliente.Mostrar(Index: Integer);
+var ListaLinha: TList;
+begin
+  showmessage((TCliente(FListaClientes.Items[Index]).Nome));
+end;
+
+procedure TListaCliente.Remover(Index: Integer);
+begin
+   if Index < Count then
+     FListaClientes.Delete(Index)
+  else
+    ShowMessage('Item não encontrado!');
+end;
+
+end.
+
+
+-------------------------------------------------------------------------
+
+unit u_principal;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, u_listaCliente, u_cliente;
+
+type
+  TformPrincipal = class(TForm)
+    adicionar: TButton;
+    remover: TButton;
+    EdtNome: TEdit;
+    Button1: TButton;
+    IDCliente: TEdit;
+    Button2: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure adicionarClick(Sender: TObject);
+    procedure removerClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+  private
+    { Private declarations }
+
+  public
+    { Public declarations }
+  end;
+
+var
+  formPrincipal: TformPrincipal;
+  tempListaCliente : TListaCliente; // Variável para armazenar a Lista
+
+implementation
+
+{$R *.dfm}
+
+procedure TformPrincipal.FormCreate(Sender: TObject);
+begin
+   tempListaCliente := TListaCliente.Create;
+end;
+
+procedure TformPrincipal.FormDestroy(Sender: TObject);
+begin
+  tempListaCliente.Free;
+end;
+
+procedure TformPrincipal.adicionarClick(Sender: TObject);
+Var
+  tempCliente : TCliente;
+begin
+  tempCliente := TCliente.Create;
+
+  tempCliente.IDCliente := StrToInt(IDCliente.Text);
+  tempCliente.Nome      := EdtNome.Text;
+
+  tempListaCliente.Adicionar(tempCliente);
+end;
+
+procedure TformPrincipal.removerClick(Sender: TObject);
+Var tempID: String;
+begin
+
+  if InputQuery('Remover Cliente','Digite o item a ser removido',tempID) then   //InputQuery e um recurso para abrir uma caixinha para pegar algum dado.
+  begin
+    tempListaCliente.Remover(StrToInt(tempID));
+  end;
+
+end;
+
+procedure TformPrincipal.Button1Click(Sender: TObject);
+begin
+  ShowMessage('Total de Registro da Lista: ' + IntToStr(tempListaCliente.Count));
+end;
+
+procedure TformPrincipal.Button2Click(Sender: TObject);
+Var tempID: String;
+begin
+  if InputQuery('Mostrar Cliente','Digite o item a ser mostrado',tempID) then   //InputQuery e um recurso para abrir uma caixinha para pegar algum dado.
+  begin
+    tempListaCliente.Mostrar(strtoint(tempID));
+  end;
+end;
+
+end.
